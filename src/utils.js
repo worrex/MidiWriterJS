@@ -175,7 +175,13 @@ class Utils {
 
 		if (duration.toLowerCase().charAt(0) === 't') {
 			// If duration starts with 't' then the number that follows is an explicit tick count
-			return parseInt(duration.substring(1));
+			const ticks = parseInt(duration.substring(1));
+
+			if (isNaN(ticks) || ticks < 0) {
+				throw new Error(duration + ' is not a valid duration.');
+			}
+
+			return ticks;
 		}
 
 		// Need to apply duration here.  Quarter note == Constants.HEADER_CHUNK_DIVISION
