@@ -34,8 +34,6 @@ var MidiWriter = (function () {
 	  META_END_OF_TRACK_ID: [0x2F, 0x00],
 	  CONTROLLER_CHANGE_STATUS: 0xB0,
 	  // includes channel number (0)
-	  PROGRAM_CHANGE_STATUS: 0xC0,
-	  // includes channel number (0)
 	  PITCH_BEND_STATUS: 0xE0 // includes channel number (0)
 
 	};
@@ -479,7 +477,13 @@ var MidiWriter = (function () {
 
 	      if (duration.toLowerCase().charAt(0) === 't') {
 	        // If duration starts with 't' then the number that follows is an explicit tick count
-	        return parseInt(duration.substring(1));
+	        var ticks = parseInt(duration.substring(1));
+
+	        if (isNaN(ticks) || ticks < 0) {
+	          throw new Error(duration + ' is not a valid duration.');
+	        }
+
+	        return ticks;
 	      } // Need to apply duration here.  Quarter note == Constants.HEADER_CHUNK_DIVISION
 
 
@@ -896,17 +900,36 @@ var MidiWriter = (function () {
 	 * @return {ProgramChangeEvent}
 	 */
 
-	var ProgramChangeEvent = /*#__PURE__*/_createClass(function ProgramChangeEvent(fields) {
-	  _classCallCheck(this, ProgramChangeEvent);
+	var ProgramChangeEvent = /*#__PURE__*/function () {
+	  function ProgramChangeEvent(fields) {
+	    _classCallCheck(this, ProgramChangeEvent);
 
-	  // Set default fields
-	  fields = Object.assign({
-	    delta: 0x00
-	  }, fields);
-	  this.type = 'program'; // delta time defaults to 0.
+	    // Set default fields
+	    this.fields = Object.assign({
+	      channel: 1,
+	      delta: 0x00
+	    }, fields);
+	    this.type = 'program'; // delta time defaults to 0.
 
-	  this.data = Utils.numberToVariableLength(fields.delta).concat(Constants.PROGRAM_CHANGE_STATUS, fields.instrument);
-	});
+	    this.data = Utils.numberToVariableLength(this.fields.delta).concat(this.getStatusByte(), this.fields.instrument);
+	  }
+	  /**
+	   * Gets the status code based on the selected channel. 0xC{0-F}
+	   * Program change status byte for channel 0 is 0xC0 (192)
+	   * 0 = Ch 1
+	   * @return {number}
+	   */
+
+
+	  _createClass(ProgramChangeEvent, [{
+	    key: "getStatusByte",
+	    value: function getStatusByte() {
+	      return 192 + this.fields.channel - 1;
+	    }
+	  }]);
+
+	  return ProgramChangeEvent;
+	}();
 
 	/**
 	 * Holds all data for a "controller change" MIDI event
