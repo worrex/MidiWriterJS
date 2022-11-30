@@ -20,7 +20,7 @@ class ProgramChangeEvent {
 
 
 	/**
-	 * Gets the status code based on the selected channel. 0x9{0-F}
+	 * Gets the status code based on the selected channel. 0xC{0-F}
 	 * Program change status byte for channel 0 is 0xC0 (192)
 	 * 0 = Ch 1
 	 * @return {number}
