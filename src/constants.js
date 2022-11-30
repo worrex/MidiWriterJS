@@ -25,7 +25,6 @@ const Constants = {
 	META_KEY_SIGNATURE_ID	: 0x59,
 	META_END_OF_TRACK_ID	: [0x2F, 0x00],
 	CONTROLLER_CHANGE_STATUS: 0xB0, // includes channel number (0)
-	PROGRAM_CHANGE_STATUS	: 0xC0, // includes channel number (0)
 	PITCH_BEND_STATUS       : 0xE0, // includes channel number (0)
 };
 
