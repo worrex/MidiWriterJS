@@ -59,6 +59,6 @@
   },
   "homepage": "https://github.com/grimmdude/MidiWriterJS#readme",
   "publishConfig": {
-    "grimmdude:registry": "https://npm.pkg.github.com"
+    "@grimmdude:registry": "https://npm.pkg.github.com"
   }
 }
