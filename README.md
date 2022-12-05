@@ -18,7 +18,7 @@ npm install midi-writer-js
 Getting Started
 ------------
 ```javascript
-const MidiWriter = require('midi-writer-js');
+import MidiWriter from 'midi-writer-js';
 
 // Start with a new track
 const track = new MidiWriter.Track();
