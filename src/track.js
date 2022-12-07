@@ -101,7 +101,7 @@ class Track {
 	buildData(options = {}) {
 		// If the last event isn't EndTrackEvent, then tack it onto the data.
 		if (!this.events.length || !(this.events[this.events.length - 1] instanceof EndTrackEvent)) {
-			this.addEvent(new EndTrackEvent);
+			this.addEvent(new EndTrackEvent());
 		}
 
 		// Reset
