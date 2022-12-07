@@ -99,9 +99,6 @@ class Track {
 	 * @return {Track}
 	 */
 	buildData(options = {}) {
-		// Remove existing end track event and add one.
-		// This makes sure it's at the very end of the event list.
-
 		// If the last event isn't EndTrackEvent, then tack it onto the data.
 		if (!this.events.length || !(this.events[this.events.length - 1] instanceof EndTrackEvent)) {
 			this.addEvent(new EndTrackEvent);
