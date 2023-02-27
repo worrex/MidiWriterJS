@@ -187,3 +187,7 @@ const track = vexWriter.trackFromVoice(voice);
 const writer = new MidiWriter.Writer([track]);
 console.log(writer.dataUri());
 ```
+
+
+## Demos
+* [Example with Magenta player](https://codepen.io/dirkk0/pen/rNZLXjZ) by Dirk Krause @dirkk0
