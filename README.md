@@ -190,4 +190,4 @@ console.log(writer.dataUri());
 
 
 ## Demos
-* [Example with Magenta player](https://codepen.io/dirkk0/pen/rNZLXjZ) by Dirk Krause @dirkk0
+* [Example with Magenta player](https://codepen.io/dirkk0/pen/rNZLXjZ) by Dirk Krause [@dirkk0](https://github.com/dirkk0)
