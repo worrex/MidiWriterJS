@@ -1,4 +1,5 @@
 import {HeaderChunk} from './header-chunk';
+import {Track} from './track';
 import {Utils} from './utils';
 
 /**
@@ -9,6 +10,9 @@ import {Utils} from './utils';
  */
 class Writer {
 	tracks: Track[];
+	options: {
+		
+	}
 
 	constructor(tracks, options = {}) {
 		// Ensure tracks is an array
@@ -36,7 +40,7 @@ class Writer {
 	 * Builds the file into a Uint8Array
 	 * @return {Uint8Array}
 	 */
-	buildFile() {
+	buildFile(): Uint8Array {
 		var build = [];
 
 		// Data consists of chunks which consists of data
@@ -49,7 +53,7 @@ class Writer {
 	 * Convert file buffer to a base64 string.  Different methods depending on if browser or node.
 	 * @return {string}
 	 */
-	base64() {
+	base64(): string {
 		if (typeof btoa === 'function') return btoa(String.fromCharCode.apply(null, this.buildFile()));
 		return Buffer.from(this.buildFile()).toString('base64');
 	}
@@ -58,7 +62,7 @@ class Writer {
      * Get the data URI.
      * @return {string}
      */
-    dataUri() {
+    dataUri(): string {
 		return 'data:audio/midi;base64,' + this.base64();
     }
 
@@ -69,7 +73,7 @@ class Writer {
 	 * @param {any} value
 	 * @return {Writer}
 	 */
-	setOption(key, value) {
+	setOption(key: string, value: any): Writer {
 		this.options[key] = value;
 		return this;
 	}

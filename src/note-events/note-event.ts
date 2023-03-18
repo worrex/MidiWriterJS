@@ -10,6 +10,15 @@ import {Utils} from '../utils';
 class NoteEvent implements MidiEvent {
 	data: number[];
 	type: string;
+	pitch: string[];
+	grace: string;
+	channel: number;
+	duration: string;
+	sequential: boolean;
+	wait: string;
+	velocity: number;
+	tickDuration: number;
+	restDuration: number;
 
 	constructor(fields) {
 		// Set default fields
@@ -45,7 +54,7 @@ class NoteEvent implements MidiEvent {
 	 * Builds int array for this event.
 	 * @return {NoteEvent}
 	 */
-	buildData() {
+	buildData(): NoteEvent {
 		// Reset data array
 		this.data = [];
 

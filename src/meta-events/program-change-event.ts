@@ -8,6 +8,11 @@ import {Utils} from '../utils';
 class ProgramChangeEvent implements MidiEvent {
 	data: number[];
 	type: string;
+	fields: {
+		channel: number,
+		delta: number,
+		instrument: number;
+	}
 
 	constructor(fields) {
 		// Set default fields

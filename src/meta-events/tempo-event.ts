@@ -6,7 +6,11 @@ import {Utils} from '../utils';
  * @param {object} fields {bpm: integer, delta: integer}
  * @return {TempoEvent}
  */
-class TempoEvent {
+class TempoEvent implements MidiEvent {
+	data: number[];
+	type: string;
+	tick: number;
+
 	constructor(fields) {
 		// Set default fields
 		fields = Object.assign({

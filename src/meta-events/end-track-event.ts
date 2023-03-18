@@ -10,7 +10,7 @@ class EndTrackEvent implements MidiEvent {
 	data: number[];
 	type: string;
 
-	constructor(fields) {
+	constructor(fields?) {
 		// Set default fields
 		fields = Object.assign({
 			delta: 0x00,
