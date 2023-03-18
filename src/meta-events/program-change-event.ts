@@ -5,7 +5,10 @@ import {Utils} from '../utils';
  * @param {object} fields {instrument: integer, delta: integer}
  * @return {ProgramChangeEvent}
  */
-class ProgramChangeEvent {
+class ProgramChangeEvent implements MidiEvent {
+	data: number[];
+	type: string;
+
 	constructor(fields) {
 		// Set default fields
 		this.fields = Object.assign({

@@ -5,7 +5,10 @@ import {Utils} from '../utils';
  * @param {object} fields {data: []}
  * @return {NoteOffEvent}
  */
-class NoteOffEvent {
+class NoteOffEvent implements MidiEvent {
+	data: number[];
+	type: string;
+
 	constructor(fields) {
 		// Set default fields
 		fields = Object.assign({

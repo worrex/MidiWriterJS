@@ -8,6 +8,8 @@ import {Utils} from './utils';
  * @return {Writer}
  */
 class Writer {
+	tracks: Track[];
+
 	constructor(tracks, options = {}) {
 		// Ensure tracks is an array
 		this.tracks = Utils.toArray(tracks);

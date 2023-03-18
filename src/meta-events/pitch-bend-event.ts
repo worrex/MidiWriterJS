@@ -7,15 +7,10 @@ import {Utils} from '../utils';
  * @param {object} fields { bend : float, channel : int, delta: int }
  * @return {PitchBendEvent}
  */
-const scale14bits = (zeroOne) => {
-    if ( zeroOne <= 0 ) {
-        return Math.floor( 16384 * ( zeroOne + 1 ) / 2 );
-    }
+class PitchBendEvent implements MidiEvent {
+	data: number[];
+	type: string;
 
-    return Math.floor( 16383 * ( zeroOne + 1 ) / 2 );
-}
-
-class PitchBendEvent {
     constructor(fields) {
         // Set default fields
 		fields = Object.assign({
@@ -24,13 +19,21 @@ class PitchBendEvent {
 
 		this.type = 'pitch-bend';
  
-		let bend14 = scale14bits(fields.bend);
+		let bend14 = this.scale14bits(fields.bend);
 		let channel = fields.channel || 0;
 
 		let lsbValue = bend14 & 0x7f;          
 		let msbValue = ( bend14 >> 7 ) & 0x7f;
 		this.data = Utils.numberToVariableLength(fields.delta).concat(Constants.PITCH_BEND_STATUS | channel, lsbValue, msbValue);
     }
+
+	scale14bits(zeroOne) {
+		if ( zeroOne <= 0 ) {
+			return Math.floor( 16384 * ( zeroOne + 1 ) / 2 );
+		}
+	
+		return Math.floor( 16383 * ( zeroOne + 1 ) / 2 );
+	}
 }
 
 export {PitchBendEvent};

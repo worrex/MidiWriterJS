@@ -7,7 +7,10 @@ import {Utils} from '../utils';
  * @param {object} fields - {pitch: '[C4]', duration: '4', wait: '4', velocity: 1-100}
  * @return {NoteEvent}
  */
-class NoteEvent {
+class NoteEvent implements MidiEvent {
+	data: number[];
+	type: string;
+
 	constructor(fields) {
 		// Set default fields
 		fields = Object.assign({

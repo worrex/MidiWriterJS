@@ -7,6 +7,10 @@ import {Utils} from './utils';
  * @return {HeaderChunk}
  */
 class HeaderChunk {
+	data: number[];
+	type: number[];
+	size: number[];
+
 	constructor(numberOfTracks) {
 		this.type = Constants.HEADER_CHUNK_TYPE;
 

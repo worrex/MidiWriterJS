@@ -6,7 +6,10 @@ import {Utils} from '../utils';
  * @param {object} fields {delta: integer}
  * @return {EndTrackEvent}
  */
-class EndTrackEvent {
+class EndTrackEvent implements MidiEvent {
+	data: number[];
+	type: string;
+
 	constructor(fields) {
 		// Set default fields
 		fields = Object.assign({

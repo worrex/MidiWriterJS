@@ -6,7 +6,10 @@ import {Utils} from '../utils.js';
  * @param {object} fields {controllerNumber: integer, controllerValue: integer, delta: integer}
  * @return {ControllerChangeEvent}
  */
-class ControllerChangeEvent {
+class ControllerChangeEvent implements MidiEvent {
+	data: number[];
+	type: string;
+
 	constructor(fields) {
 		// Set default fields
 		fields = Object.assign({

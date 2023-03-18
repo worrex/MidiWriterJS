@@ -5,7 +5,10 @@ import {Utils} from '../utils';
  * Object representation of a key signature meta event.
  * @return {KeySignatureEvent}
  */
-class KeySignatureEvent {
+class KeySignatureEvent implements MidiEvent {
+	data: number[];
+	type: string;
+
 	constructor(sf, mi) {
 		this.type = 'key-signature';
 

@@ -6,7 +6,10 @@ import {Utils} from '../utils';
  * @param {object} fields {text: string, delta: integer}
  * @return {CopyrightEvent}
  */
-class CopyrightEvent {
+class CopyrightEvent implements MidiEvent {
+	data: number[];
+	type: string;
+
 	constructor(fields) {
 		// Set default fields
 		fields = Object.assign({
