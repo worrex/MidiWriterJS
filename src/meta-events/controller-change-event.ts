@@ -6,8 +6,9 @@ import {Utils} from '../utils.js';
  * @param {object} fields {controllerNumber: integer, controllerValue: integer, delta: integer}
  * @return {ControllerChangeEvent}
  */
-class ControllerChangeEvent implements MidiEvent {
+class ControllerChangeEvent implements MetaEvent, AbstractEvent {
 	data: number[];
+	delta: number;
 	type: string;
 
 	constructor(fields) {

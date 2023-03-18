@@ -5,8 +5,9 @@ import {Utils} from '../utils';
  * @param {object} fields {instrument: integer, delta: integer}
  * @return {ProgramChangeEvent}
  */
-class ProgramChangeEvent implements MidiEvent {
+class ProgramChangeEvent implements MetaEvent, AbstractEvent {
 	data: number[];
+	delta: number;
 	type: string;
 	fields: {
 		channel: number,

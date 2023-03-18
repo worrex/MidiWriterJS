@@ -1,5 +1,5 @@
-import {NoteEvent} from './note-events/note-event';
-import {Track} from './track';
+import {NoteEvent} from './midi-events/note-event';
+import {Track} from './chunks/track';
 
 class VexFlow {
 

@@ -1,31 +1,31 @@
-import {Constants} from './constants';
-import {ControllerChangeEvent} from './meta-events/controller-change-event';
-import {CopyrightEvent} from './meta-events/copyright-event';
-import {CuePointEvent} from './meta-events/cue-point-event';
-import {EndTrackEvent} from './meta-events/end-track-event';
-import {InstrumentNameEvent} from './meta-events/instrument-name-event';
-import {KeySignatureEvent} from './meta-events/key-signature-event';
-import {LyricEvent} from './meta-events/lyric-event';
-import {MarkerEvent} from './meta-events/marker-event';
-import {NoteEvent} from './note-events/note-event';
-import {NoteOnEvent} from './note-events/note-on-event';
-import {NoteOffEvent} from './note-events/note-off-event';
-import {PitchBendEvent} from './meta-events/pitch-bend-event';
-import {TempoEvent} from './meta-events/tempo-event';
-import {TextEvent} from './meta-events/text-event';
-import {TimeSignatureEvent} from './meta-events/time-signature-event';
-import {TrackNameEvent} from './meta-events/track-name-event';
-import {Utils} from './utils';
+import {Constants} from '../constants';
+import {ControllerChangeEvent} from '../meta-events/controller-change-event';
+import {CopyrightEvent} from '../meta-events/copyright-event';
+import {CuePointEvent} from '../meta-events/cue-point-event';
+import {EndTrackEvent} from '../meta-events/end-track-event';
+import {InstrumentNameEvent} from '../meta-events/instrument-name-event';
+import {KeySignatureEvent} from '../meta-events/key-signature-event';
+import {LyricEvent} from '../meta-events/lyric-event';
+import {MarkerEvent} from '../meta-events/marker-event';
+import {NoteEvent} from '../midi-events/note-event';
+import {NoteOnEvent} from '../midi-events/note-on-event';
+import {NoteOffEvent} from '../midi-events/note-off-event';
+import {PitchBendEvent} from '../meta-events/pitch-bend-event';
+import {TempoEvent} from '../meta-events/tempo-event';
+import {TextEvent} from '../meta-events/text-event';
+import {TimeSignatureEvent} from '../meta-events/time-signature-event';
+import {TrackNameEvent} from '../meta-events/track-name-event';
+import {Utils} from '../utils';
 
 /**
  * Holds all data for a track.
  * @param {object} fields {type: number, data: array, size: array, events: array}
  * @return {Track}
  */
-class Track {
+class Track implements Chunk {
 	data: number[];
 	events: MidiEvent[];
-	explicitTickEvents: MidiEvent[];
+	explicitTickEvents: NoteEvent[];
 	size: number[];
 	type: number[];
 	tickPointer: number;

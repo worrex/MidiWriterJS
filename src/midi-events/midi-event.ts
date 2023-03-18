@@ -1,4 +1,5 @@
 interface MidiEvent {
-    data: number[];
+    channel: number;
+    delta: number;
     type: string;
 }

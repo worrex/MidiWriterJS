@@ -9,10 +9,14 @@ import {Utils} from '../utils';
  */
 class NoteEvent implements MidiEvent {
 	data: number[];
+	delta: number;
+	events: MidiEvent[];
 	type: string;
 	pitch: string[];
-	grace: string;
+	grace: string|string[];
 	channel: number;
+	repeat: number;
+	startTick: number;
 	duration: string;
 	sequential: boolean;
 	wait: string;

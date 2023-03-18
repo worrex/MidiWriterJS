@@ -5,8 +5,9 @@ import {Utils} from '../utils';
  * Object representation of a time signature meta event.
  * @return {TimeSignatureEvent}
  */
-class TimeSignatureEvent implements MidiEvent {
+class TimeSignatureEvent implements MetaEvent, AbstractEvent {
 	data: number[];
+	delta: number;
 	type: string;
 
 	constructor(numerator, denominator, midiclockspertick, notespermidiclock) {

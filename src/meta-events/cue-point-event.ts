@@ -6,8 +6,9 @@ import {Utils} from '../utils';
  * @param {object} fields {text: string, delta: integer}
  * @return {CuePointEvent}
  */
-class CuePointEvent implements MidiEvent {
+class CuePointEvent implements MetaEvent, AbstractEvent {
 	data: number[];
+	delta: number;
 	type: string;
 
 	constructor(fields) {

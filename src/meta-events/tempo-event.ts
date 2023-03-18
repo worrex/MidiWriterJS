@@ -6,8 +6,9 @@ import {Utils} from '../utils';
  * @param {object} fields {bpm: integer, delta: integer}
  * @return {TempoEvent}
  */
-class TempoEvent implements MidiEvent {
+class TempoEvent implements MetaEvent, AbstractEvent {
 	data: number[];
+	delta: number;
 	type: string;
 	tick: number;
 

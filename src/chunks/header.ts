@@ -1,12 +1,12 @@
-import {Constants} from './constants';
-import {Utils} from './utils';
+import {Constants} from '../constants';
+import {Utils} from '../utils';
 
 /**
  * Object representation of a header chunk section of a MIDI file.
  * @param {number} numberOfTracks - Number of tracks
- * @return {HeaderChunk}
+ * @return {Header}
  */
-class HeaderChunk {
+class Header implements Chunk {
 	data: number[];
 	type: number[];
 	size: number[];
@@ -25,4 +25,4 @@ class HeaderChunk {
 	}
 }
 
-export {HeaderChunk};
+export {Header};

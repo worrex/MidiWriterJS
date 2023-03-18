@@ -5,8 +5,11 @@ import {Utils} from '../utils';
  * @param {object} fields {data: []}
  * @return {NoteOffEvent}
  */
-class NoteOffEvent implements MidiEvent {
+class NoteOffEvent implements MidiEvent, AbstractEvent {
+	channel: number;
 	data: number[];
+	delta: number;
+	deltaWithPrecisionCorrection: number;
 	type: string;
 
 	constructor(fields) {

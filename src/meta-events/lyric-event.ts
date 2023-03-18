@@ -6,8 +6,9 @@ import {Utils} from '../utils';
  * @param {object} fields {text: string, delta: integer}
  * @return {LyricEvent}
  */
-class LyricEvent implements MidiEvent {
+class LyricEvent implements MetaEvent, AbstractEvent {
 	data: number[];
+	delta: number;
 	type: string;
 
 	constructor(fields) {

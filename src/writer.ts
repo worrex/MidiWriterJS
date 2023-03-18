@@ -1,5 +1,5 @@
-import {HeaderChunk} from './header-chunk';
-import {Track} from './track';
+import {Header} from './chunks/header';
+import {Track} from './chunks/track';
 import {Utils} from './utils';
 
 /**
@@ -26,7 +26,7 @@ class Writer {
 	 */
 	buildData() {
 		const data = [];
-		data.push(new HeaderChunk(this.tracks.length))
+		data.push(new Header(this.tracks.length))
 
 		// For each track add final end of track event and build data
 		this.tracks.forEach((track) => {

@@ -5,8 +5,9 @@ import {Utils} from '../utils';
  * Object representation of a key signature meta event.
  * @return {KeySignatureEvent}
  */
-class KeySignatureEvent implements MidiEvent {
+class KeySignatureEvent implements MetaEvent, AbstractEvent {
 	data: number[];
+	delta: number;
 	type: string;
 
 	constructor(sf, mi) {

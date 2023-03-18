@@ -6,8 +6,9 @@ import {Utils} from '../utils';
  * @param {object} fields {text: string, delta: integer}
  * @return {CopyrightEvent}
  */
-class CopyrightEvent implements MidiEvent {
+class CopyrightEvent implements MetaEvent, AbstractEvent {
 	data: number[];
+	delta: number;
 	type: string;
 
 	constructor(fields) {
