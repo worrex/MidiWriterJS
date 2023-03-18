@@ -10,7 +10,9 @@ class NoteOffEvent implements MidiEvent, AbstractEvent {
 	data: number[];
 	delta: number;
 	deltaWithPrecisionCorrection: number;
+	status: number;
 	type: string;
+	velocity: number;
 
 	constructor(fields) {
 		// Set default fields
@@ -29,6 +31,7 @@ class NoteOffEvent implements MidiEvent, AbstractEvent {
 		this.tick 		= fields.tick;
 		this.delta 		= Utils.getTickDuration(this.duration);
 		this.data 		= fields.data;
+		this.status = 0x80;
 	}
 
 	/**
@@ -45,21 +48,13 @@ class NoteOffEvent implements MidiEvent, AbstractEvent {
 
 		this.data = Utils.numberToVariableLength(this.deltaWithPrecisionCorrection)
 					.concat(
-							this.getStatusByte(),
+							this.status | this.channel - 1,
 							Utils.getPitch(this.pitch, options.middleC),
 							Utils.convertVelocity(this.velocity)
 					);
 
 		return this;
 	}
-
-	/**
-	 * Gets the note off status code based on the selected channel. 0x8{0-F}
-	 * Note off at channel 0 is 0x80 (128)
-	 * 0 = Ch 1
-	 * @return {number}
-	 */
-	getStatusByte() {return 128 + this.channel - 1}
 }
 
 export {NoteOffEvent};

@@ -1,5 +1,5 @@
 import {Constants} from './constants';
-import {ControllerChangeEvent} from './meta-events/controller-change-event';
+import {ControllerChangeEvent} from './midi-events/controller-change-event';
 import {CuePointEvent} from './meta-events/cue-point-event';
 import {EndTrackEvent} from './meta-events/end-track-event';
 import {InstrumentNameEvent} from './meta-events/instrument-name-event';
@@ -9,8 +9,8 @@ import {MarkerEvent} from './meta-events/marker-event';
 import {NoteOnEvent} from './midi-events/note-on-event';
 import {NoteOffEvent} from './midi-events/note-off-event';
 import {NoteEvent} from './midi-events/note-event';
-import {PitchBendEvent} from './meta-events/pitch-bend-event';
-import {ProgramChangeEvent} from './meta-events/program-change-event';
+import {PitchBendEvent} from './midi-events/pitch-bend-event';
+import {ProgramChangeEvent} from './midi-events/program-change-event';
 import {TempoEvent} from './meta-events/tempo-event';
 import {TextEvent} from './meta-events/text-event';
 import {TimeSignatureEvent} from './meta-events/time-signature-event';
