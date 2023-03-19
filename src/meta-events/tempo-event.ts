@@ -7,17 +7,17 @@ import {Utils} from '../utils';
  * @return {TempoEvent}
  */
 class TempoEvent implements MetaEvent {
+	bpm: number;
 	data: number[];
 	delta: number;
 	name: string;
 	tick: number;
 	type: 0x51;
-	bpm: number;
-
+	
 	constructor(fields: { bpm: number; tick?: number; delta?: number; }) {
+		this.bpm = fields.bpm;
 		this.delta = fields.delta || 0x00;
 		this.tick = fields.tick;
-		this.bpm = fields.bpm;
 		this.name = 'TempoEvent';
 		this.type = 0x51;
 

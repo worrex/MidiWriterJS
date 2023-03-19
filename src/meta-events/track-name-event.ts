@@ -10,13 +10,13 @@ class TrackNameEvent implements MetaEvent {
 	data: number[];
 	delta: number;
 	name: string;
-	type: 0x03;
 	text: string;
+	type: 0x03;
 
 	constructor(fields: { text: string; delta?: number; }) {
 		this.delta = fields.delta || 0x00;
-		this.text = fields.text;
 		this.name = 'TrackNameEvent';
+		this.text = fields.text;
 		this.type = 0x03;
 
 		const textBytes = Utils.stringToBytes(this.text);

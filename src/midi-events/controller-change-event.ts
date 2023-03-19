@@ -8,18 +8,18 @@ import {Utils} from '../utils.js';
  */
 class ControllerChangeEvent implements MidiEvent {
 	channel: number;
+	controllerNumber: number;
+	controllerValue: number;
 	data: number[];
 	delta: number;
 	name: string;
 	status: 0xB0;
-	controllerNumber: number;
-	controllerValue: number;
 
 	constructor(fields: { controllerNumber: number; controllerValue: number; channel?: number; delta?: number; }) {
 		this.channel = fields.channel || 0;
-		this.delta = fields.delta || 0x00;
 		this.controllerValue = fields.controllerValue;
 		this.controllerNumber = fields.controllerNumber;
+		this.delta = fields.delta || 0x00;
 		this.name = 'ControllerChangeEvent';
 		this.status = 0xB0;
 		

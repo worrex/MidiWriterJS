@@ -10,14 +10,14 @@ class MarkerEvent implements MetaEvent {
 	data: number[];
 	delta: number;
 	name: string;
-	type: 0x06;
 	text: string;
+	type: 0x06;
 
 	constructor(fields: { text: string; delta?: number; }) {
 		this.delta = fields.delta || 0x00;
 		this.name = 'MarkerEvent';
-		this.type = 0x06;
 		this.text = fields.text;
+		this.type = 0x06;
 
 		const textBytes = Utils.stringToBytes(this.text);
 

@@ -11,14 +11,14 @@ class PitchBendEvent implements MidiEvent {
 	channel: number;
 	data: number[];
 	delta: number;
-	status: 0xE0;
 	name: string;
+	status: 0xE0;
 
     constructor(fields) {
-		this.name = 'PitchBendEvent';
-		this.status = 0xE0;
 		this.channel = fields.channel || 0;
 		this.delta = fields.delta || 0x00;
+		this.name = 'PitchBendEvent';
+		this.status = 0xE0;
  
 		let bend14 = this.scale14bits(fields.bend);
 
