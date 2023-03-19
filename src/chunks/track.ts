@@ -24,7 +24,7 @@ import {Utils} from '../utils';
  */
 class Track implements Chunk {
 	data: number[];
-	events: MidiEvent[];
+	events: AbstractEvent[];
 	explicitTickEvents: NoteEvent[];
 	size: number[];
 	type: number[];
@@ -50,7 +50,7 @@ class Track implements Chunk {
 	 * @param {Function} mapFunction - Callback which can be used to apply specific properties to all events.
 	 * @return {Track}
 	 */
-	addEvent(events: (MidiEvent|MidiEvent[]), mapFunction?: Function): Track {
+	addEvent(events: (AbstractEvent|AbstractEvent[]), mapFunction?: Function): Track {
 		Utils.toArray(events).forEach((event, i) => {
 			if (event instanceof NoteEvent) {
 				// Handle map function if provided
@@ -89,7 +89,7 @@ class Track implements Chunk {
 			} else if (event instanceof EndTrackEvent) {
 				// Only one EndTrackEvent is allowed, so remove
 				// any existing ones before adding.
-				this.removeEventsByType('end-track');
+				this.removeEventsByName('EndTrackEvent');
 				this.events.push(event);
 
 			} else {
@@ -181,10 +181,10 @@ class Track implements Chunk {
 
 	/**
 	 * Merges a single event into this track's list of events based on event.tick property.
-	 * @param {MidiEvent} - event
+	 * @param {AbstractEvent} - event
 	 * @return {Track}
 	 */
-	mergeSingleEvent(event: MidiEvent): Track {
+	mergeSingleEvent(event: AbstractEvent): Track {
 		// There are no events yet, so just add it in.
 		if (!this.events.length) {
 			this.addEvent(event);
@@ -217,12 +217,12 @@ class Track implements Chunk {
 
 	/**
 	 * Removes all events matching specified type.
-	 * @param {string} eventType - Event type
+	 * @param {string} eventName - Event type
 	 * @return {Track}
 	 */
-	removeEventsByType(eventType: string): Track {
+	removeEventsByName(eventName: string): Track {
 		this.events.forEach((event, index) => {
-			if (event.type === eventType) {
+			if (event.name === eventName) {
 				this.events.splice(index, 1);
 			}
 		});

@@ -8,10 +8,12 @@ import {Utils} from '../utils';
 class KeySignatureEvent implements MetaEvent, AbstractEvent {
 	data: number[];
 	delta: number;
-	type: string;
+	name: string;
+	type: 0x59;
 
 	constructor(sf, mi) {
-		this.type = 'key-signature';
+		this.name = 'KeySignatureEvent';
+		this.type = 0x59;
 
 		var mode = mi || 0;
 		sf = sf || 0;
@@ -59,7 +61,7 @@ class KeySignatureEvent implements MetaEvent, AbstractEvent {
 		// Start with zero time delta
 		this.data = Utils.numberToVariableLength(0x00).concat(
 			Constants.META_EVENT_ID,
-			Constants.META_KEY_SIGNATURE_ID,
+			this.type,
 			[0x02], // Size
 			Utils.numberToBytes(sf, 1), // Number of sharp or flats ( < 0 flat; > 0 sharp)
 			Utils.numberToBytes(mode, 1), // Mode: 0 major, 1 minor

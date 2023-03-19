@@ -9,22 +9,22 @@ import {Utils} from '../utils';
 class MarkerEvent implements MetaEvent, AbstractEvent {
 	data: number[];
 	delta: number;
-	type: string;
+	name: string;
+	type: 0x06;
+	text: string;
 
-	constructor(fields) {
-		// Set default fields
-		fields = Object.assign({
-			delta: 0x00,
-		}, fields);
+	constructor(fields: { text: string; delta?: number; }) {
+		this.delta = fields.delta || 0x00;
+		this.name = 'MarkerEvent';
+		this.type = 0x06;
+		this.text = fields.text;
 
-		this.type = 'marker';
-
-		const textBytes = Utils.stringToBytes(fields.text);
+		const textBytes = Utils.stringToBytes(this.text);
 
 		// Start with zero time delta
-		this.data = Utils.numberToVariableLength(fields.delta).concat(
+		this.data = Utils.numberToVariableLength(this.delta).concat(
 			Constants.META_EVENT_ID,
-			Constants.META_MARKER_ID,
+			this.type,
 			Utils.numberToVariableLength(textBytes.length), // Size
 			textBytes, // Text
 		);

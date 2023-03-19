@@ -8,15 +8,17 @@ import {Utils} from '../utils';
 class TimeSignatureEvent implements MetaEvent, AbstractEvent {
 	data: number[];
 	delta: number;
-	type: string;
+	name: string;
+	type: 0x58;
 
 	constructor(numerator, denominator, midiclockspertick, notespermidiclock) {
-		this.type = 'time-signature';
+		this.name = 'TimeSignatureEvent';
+		this.type = 0x58;
 
 		// Start with zero time delta
 		this.data = Utils.numberToVariableLength(0x00).concat(
 			Constants.META_EVENT_ID,
-			Constants.META_TIME_SIGNATURE_ID,
+			this.type,
 			[0x04], // Size
 			Utils.numberToBytes(numerator, 1), // Numerator, 1 bytes
 			Utils.numberToBytes(Math.log2(denominator), 1), // Denominator is expressed as pow of 2, 1 bytes

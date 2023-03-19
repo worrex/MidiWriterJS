@@ -11,7 +11,7 @@ class NoteEvent implements AbstractEvent {
 	data: number[];
 	delta: number;
 	events: MidiEvent[];
-	type: string;
+	name: string;
 	pitch: string[];
 	grace: string|string[];
 	channel: number;
@@ -36,7 +36,7 @@ class NoteEvent implements AbstractEvent {
 		}, fields);
 
 		this.data 		= [];
-		this.type 		= 'note';
+		this.name 		= 'NoteEvent';
 		this.pitch 		= Utils.toArray(fields.pitch);
 
 		this.channel 	= fields.channel;

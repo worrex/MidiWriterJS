@@ -9,26 +9,22 @@ class NoteOnEvent implements MidiEvent, AbstractEvent {
 	channel: number;
 	data: number[];
 	delta: number;
-	status: number;
-	type: string;
-	pitch: string|string[];
+	status: 0x90;
+	name: string;
+	pitch: string|string[]|number|number[];
 	velocity: number;
+	startTick: number;
+	wait: string|number;
+	tick: number;
+	deltaWithPrecisionCorrection: number;
 
-	constructor(fields) {
-		// Set default fields
-		fields = Object.assign({
-			channel: 1,
-			startTick: null,
-			velocity: 50,
-			wait: 0,
-		}, fields);
-
-		this.type 		= 'note-on';
-		this.channel 	= fields.channel;
+	constructor(fields: { channel?: number; wait?: string|number; velocity?: number; pitch?: string|string[]|number|number[]; startTick?: number; data?: number[]; }) {
+		this.name 		= 'NoteOnEvent';
+		this.channel 	= fields.channel || 1;
 		this.pitch 		= fields.pitch;
-		this.wait 		= fields.wait;
-		this.velocity 	= fields.velocity;
-		this.startTick 	= fields.startTick;
+		this.wait 		= fields.wait || 0;
+		this.velocity 	= fields.velocity || 50;
+		this.startTick 	= fields.startTick || null;
 
 		this.tick 		= null;
 		this.delta 		= null;
@@ -41,7 +37,7 @@ class NoteOnEvent implements MidiEvent, AbstractEvent {
 	 * @param {Track} track - parent track
 	 * @return {NoteOnEvent}
 	 */
-	buildData(track, precisionDelta, options = {}) {
+	buildData(track, precisionDelta, options: {middleC?: string} = {}) {
 		this.data = [];
 
 		// Explicitly defined startTick event

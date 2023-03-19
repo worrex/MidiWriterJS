@@ -10,27 +10,22 @@ class NoteOffEvent implements MidiEvent, AbstractEvent {
 	data: number[];
 	delta: number;
 	deltaWithPrecisionCorrection: number;
-	status: number;
-	type: string;
+	status: 0x80;
+	name: string;
 	velocity: number;
+	pitch: string|number;
+	duration: string|number;
+	tick: number;
 
-	constructor(fields) {
-		// Set default fields
-		fields = Object.assign({
-			channel: 1,
-			velocity: 50,
-			tick: null,
-		}, fields);
-
-		this.type 		= 'note-off';
-		this.channel 	= fields.channel;
-		this.pitch 		= fields.pitch;
-		this.duration 	= fields.duration;
-		this.velocity 	= fields.velocity;
-
-		this.tick 		= fields.tick;
-		this.delta 		= Utils.getTickDuration(this.duration);
-		this.data 		= fields.data;
+	constructor(fields: { channel: number; duration: string|number; velocity: number; pitch: string|number; tick?: number; data?: number[]; }) {
+		this.name = 'NoteOffEvent';
+		this.channel = fields.channel || 1;
+		this.pitch = fields.pitch;
+		this.duration = fields.duration;
+		this.velocity = fields.velocity || 50;
+		this.tick = fields.tick || null;
+		this.data = fields.data;
+		this.delta = Utils.getTickDuration(this.duration);
 		this.status = 0x80;
 	}
 
@@ -39,7 +34,7 @@ class NoteOffEvent implements MidiEvent, AbstractEvent {
 	 * @param {Track} track - parent track
 	 * @return {NoteOffEvent}
 	 */
-	buildData(track, precisionDelta, options = {}) {
+	buildData(track, precisionDelta, options: {middleC?: string} = {}) {
 		if (this.tick === null) {
 			this.tick = Utils.getRoundedIfClose(this.delta + track.tickPointer);
 		}

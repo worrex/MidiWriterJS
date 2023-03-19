@@ -10,17 +10,20 @@ class ControllerChangeEvent implements MidiEvent, AbstractEvent {
 	channel: number;
 	data: number[];
 	delta: number;
-	type: string;
+	name: string;
+	status: 0xB0;
+	controllerNumber: number;
+	controllerValue: number;
 
-	constructor(fields) {
-		// Set default fields
-		fields = Object.assign({
-			delta: 0x00,
-		}, fields);
-
-		this.type = 'controller';
-		// delta time defaults to 0.
-		this.data = Utils.numberToVariableLength(fields.delta).concat(Constants.CONTROLLER_CHANGE_STATUS, fields.controllerNumber, fields.controllerValue);
+	constructor(fields: { controllerNumber: number; controllerValue: number; channel?: number; delta?: number; }) {
+		this.channel = fields.channel || 0;
+		this.delta = fields.delta || 0x00;
+		this.controllerValue = fields.controllerValue;
+		this.controllerNumber = fields.controllerNumber;
+		this.name = 'ControllerChangeEvent';
+		this.status = 0xB0;
+		
+		this.data = Utils.numberToVariableLength(fields.delta).concat(this.status | this.channel, this.controllerNumber, this.controllerValue);
 	}
 }
 

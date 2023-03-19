@@ -9,20 +9,18 @@ import {Utils} from '../utils';
 class EndTrackEvent implements MetaEvent, AbstractEvent {
 	data: number[];
 	delta: number;
-	type: string;
+	type: [0x2F, 0x00];
+	name: string;
 
-	constructor(fields?) {
-		// Set default fields
-		fields = Object.assign({
-			delta: 0x00,
-		}, fields);
-
-		this.type = 'end-track';
+	constructor(fields?: { delta: number; }) {
+		this.delta = fields?.delta || 0x00;
+		this.name = 'EndTrackEvent';
+		this.type = [0x2F, 0x00];
 
 		// Start with zero time delta
-		this.data = Utils.numberToVariableLength(fields.delta).concat(
+		this.data = Utils.numberToVariableLength(this.delta).concat(
 			Constants.META_EVENT_ID,
-			Constants.META_END_OF_TRACK_ID
+			this.type
 		);
 	}
 }

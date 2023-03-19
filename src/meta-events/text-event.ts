@@ -9,22 +9,22 @@ import {Utils} from '../utils';
 class TextEvent implements MetaEvent, AbstractEvent {
 	data: number[];
 	delta: number;
-	type: string;
+	name: string;
+	text: string;
+	type: 0x01;
 
-	constructor(fields) {
-		// Set default fields
-		fields = Object.assign({
-			delta: 0x00,
-		}, fields);
+	constructor(fields: { text: string; delta?: number; }) {
+		this.delta = fields.delta || 0x00;
+		this.text = fields.text;
+		this.name = 'TextEvent';
+		this.type = 0x01;
 
-		this.type = 'text';
-
-		const textBytes = Utils.stringToBytes(fields.text);
+		const textBytes = Utils.stringToBytes(this.text);
 
 		// Start with zero time delta
 		this.data = Utils.numberToVariableLength(fields.delta).concat(
 			Constants.META_EVENT_ID,
-			Constants.META_TEXT_ID,
+			this.type,
 			Utils.numberToVariableLength(textBytes.length), // Size
 			textBytes, // Text
 		);

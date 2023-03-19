@@ -9,25 +9,24 @@ import {Utils} from '../utils';
 class TempoEvent implements MetaEvent, AbstractEvent {
 	data: number[];
 	delta: number;
-	type: string;
+	name: string;
 	tick: number;
+	type: 0x51;
+	bpm: number;
 
-	constructor(fields) {
-		// Set default fields
-		fields = Object.assign({
-			delta: 0x00,
-		}, fields);
-
-		this.type = 'tempo';
-
+	constructor(fields: { bpm: number; tick?: number; delta?: number; }) {
+		this.delta = fields.delta || 0x00;
 		this.tick = fields.tick;
+		this.bpm = fields.bpm;
+		this.name = 'TempoEvent';
+		this.type = 0x51;
 
-		const tempo = Math.round(60000000 / fields.bpm);
+		const tempo = Math.round(60000000 / this.bpm);
 
 		// Start with zero time delta
-		this.data = Utils.numberToVariableLength(fields.delta).concat(
+		this.data = Utils.numberToVariableLength(this.delta).concat(
 			Constants.META_EVENT_ID,
-			Constants.META_TEMPO_ID,
+			this.type,
 			[0x03], // Size
 			Utils.numberToBytes(tempo, 3), // Tempo, 3 bytes
 		);

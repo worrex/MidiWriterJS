@@ -9,27 +9,18 @@ class ProgramChangeEvent implements MidiEvent, AbstractEvent {
 	channel: number;
     data: number[];
     delta: number;
-	status: number;
-    type: string;
+	status: 0xC0;
+    name: string;
+	instrument: number;
 
-	fields: {
-		channel: number,
-		delta: number,
-		instrument: number;
-	}
-
-	constructor(fields) {
-		// Set default fields
-		this.fields = Object.assign({
-			channel: 0,
-			delta: 0x00,
-		}, fields);
-
-		this.channel = this.fields.channel;
+	constructor(fields: { channel?: number; delta?: number; instrument: number; }) {
+		this.channel = fields.channel || 0;
+		this.delta = fields.delta || 0x00;
+		this.instrument = fields.instrument;
 		this.status = 0xC0;
-		this.type = 'program';
+		this.name = 'ProgramChangeEvent';
 		// delta time defaults to 0.
-		this.data = Utils.numberToVariableLength(this.fields.delta).concat(this.status | this.channel, this.fields.instrument);
+		this.data = Utils.numberToVariableLength(this.delta).concat(this.status | this.channel, this.instrument);
 	}
 }
 

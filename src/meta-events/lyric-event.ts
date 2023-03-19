@@ -9,22 +9,22 @@ import {Utils} from '../utils';
 class LyricEvent implements MetaEvent, AbstractEvent {
 	data: number[];
 	delta: number;
-	type: string;
+	type: 0x05;
+	name: string;
+	text: string;
 
-	constructor(fields) {
-		// Set default fields
-		fields = Object.assign({
-			delta: 0x00,
-		}, fields);
+	constructor(fields: { text: string; delta?: number; }) {
+		this.delta = fields.delta || 0x00;
+		this.name = 'LyricEvent';
+		this.type = 0x05;
+		this.text = fields.text;
 
-		this.type = 'lyric';
-
-		const textBytes = Utils.stringToBytes(fields.text);
+		const textBytes = Utils.stringToBytes(this.text);
 
 		// Start with zero time delta
-		this.data = Utils.numberToVariableLength(fields.delta).concat(
+		this.data = Utils.numberToVariableLength(this.delta).concat(
 			Constants.META_EVENT_ID,
-			Constants.META_LYRIC_ID,
+			this.type,
 			Utils.numberToVariableLength(textBytes.length), // Size
 			textBytes, // Text
 		);
