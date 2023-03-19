@@ -1,3 +1,4 @@
+import {MidiEvent} from './midi-event';
 import {Utils} from '../utils';
 
 /**

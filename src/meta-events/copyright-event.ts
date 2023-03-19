@@ -1,4 +1,5 @@
 import {Constants} from '../constants';
+import {MetaEvent} from './meta-event';
 import {Utils} from '../utils';
 
 /**

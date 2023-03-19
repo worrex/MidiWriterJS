@@ -1,5 +1,6 @@
-import {Constants} from '../constants';
+import {MidiEvent} from './midi-event';
 import {Utils} from '../utils';
+
 
 /**
  * Holds all data for a "Pitch Bend" MIDI event
@@ -20,10 +21,10 @@ class PitchBendEvent implements MidiEvent {
 		this.name = 'PitchBendEvent';
 		this.status = 0xE0;
  
-		let bend14 = this.scale14bits(fields.bend);
+		const bend14 = this.scale14bits(fields.bend);
 
-		let lsbValue = bend14 & 0x7f;          
-		let msbValue = ( bend14 >> 7 ) & 0x7f;
+		const lsbValue = bend14 & 0x7f;          
+		const msbValue = ( bend14 >> 7 ) & 0x7f;
 		this.data = Utils.numberToVariableLength(this.delta).concat(this.status | this.channel, lsbValue, msbValue);
     }
 

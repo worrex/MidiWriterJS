@@ -10,9 +10,7 @@ import {Utils} from './utils';
  */
 class Writer {
 	tracks: Track[];
-	options: {
-		
-	}
+	options: object;
 
 	constructor(tracks, options = {}) {
 		// Ensure tracks is an array
@@ -41,7 +39,7 @@ class Writer {
 	 * @return {Uint8Array}
 	 */
 	buildFile(): Uint8Array {
-		var build = [];
+		let build = [];
 
 		// Data consists of chunks which consists of data
 		this.buildData().forEach((d) => build = build.concat(d.type, d.size, d.data));
@@ -76,7 +74,7 @@ class Writer {
 	 * @param {any} value
 	 * @return {Writer}
 	 */
-	setOption(key: string, value: any): Writer {
+	setOption(key: string, value: number|string): Writer {
 		this.options[key] = value;
 		return this;
 	}

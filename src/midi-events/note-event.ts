@@ -1,3 +1,5 @@
+import {AbstractEvent} from '../abstract-event';
+import {MidiEvent} from './midi-event';
 import {NoteOnEvent} from './note-on-event';
 import {NoteOffEvent} from './note-off-event';
 import {Utils} from '../utils';
@@ -54,10 +56,10 @@ class NoteEvent implements AbstractEvent {
 
 		// Apply grace note(s) and subtract ticks (currently 1 tick per grace note) from tickDuration so net value is the same
 		if (this.grace) {
-			let graceDuration = 1;
+			const graceDuration = 1;
 			this.grace = Utils.toArray(this.grace);
 			this.grace.forEach(() => {
-				let noteEvent = new NoteEvent({pitch: this.grace, duration:'T' + graceDuration});
+				const noteEvent = new NoteEvent({pitch: this.grace, duration:'T' + graceDuration});
 				this.data = this.data.concat(noteEvent.data);
 			});
 		}

@@ -4,3 +4,5 @@ interface AbstractEvent {
     name: string;
     tick?: number;
 }
+
+export {AbstractEvent};

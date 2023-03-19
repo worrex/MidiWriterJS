@@ -28,6 +28,7 @@ class Utils {
 	 * @param {*} n - Value to check
 	 * @return {boolean}
 	 */
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	static isNumeric(n: any): boolean {
 		return !isNaN(parseFloat(n)) && isFinite(n)
 	}
@@ -39,7 +40,7 @@ class Utils {
 	 * @param {string} middleC
 	 * @return {number}
 	 */
-	static getPitch(pitch: (string|string[]|number|number[]), middleC: string = 'C4'): number {
+	static getPitch(pitch: (string|string[]|number|number[]), middleC = 'C4'): number {
 		return 60 - toMidi(middleC) + toMidi(pitch);
 	}
 
@@ -54,7 +55,7 @@ class Utils {
 	 */
 	static numberToVariableLength(ticks: number): number[] {
 		ticks = Math.round(ticks);
-		var buffer = ticks & 0x7F;
+		let buffer = ticks & 0x7F;
 
 		// eslint-disable-next-line no-cond-assign
 		while (ticks = ticks >> 7) {
@@ -62,7 +63,8 @@ class Utils {
 			buffer |= ((ticks & 0x7F) | 0x80);
 		}
 
-		var bList = [];
+		const bList = [];
+		// eslint-disable-next-line no-constant-condition
 		while (true) {
 			bList.push(buffer & 0xff);
 
@@ -88,8 +90,8 @@ class Utils {
 	 * @return {number}
 	 */
 	static numberFromBytes(bytes: number[]): number {
-		var hex = '';
-		var stringResult;
+		let hex = '';
+		let stringResult;
 
 		bytes.forEach((byte) => {
 			stringResult = byte.toString(16);
@@ -119,7 +121,7 @@ class Utils {
 		}
 
 		// Split hex string into an array of two char elements
-		let hexArray = hexString.match(/.{2}/g);
+		const hexArray = hexString.match(/.{2}/g);
 
 		// Now parse them out as integers
 		const intArray = hexArray.map(item => parseInt(item, 16))
@@ -139,6 +141,7 @@ class Utils {
 	 * @param {any} value
 	 * @return {array}
 	 */
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	static toArray(value: any): any[] {
 		if (Array.isArray(value)) return value;
 		return [value];
@@ -185,7 +188,7 @@ class Utils {
 		}
 
 		// Need to apply duration here.  Quarter note == Constants.HEADER_CHUNK_DIVISION
-		var quarterTicks = Utils.numberFromBytes(Constants.HEADER_CHUNK_DIVISION);
+		const quarterTicks = Utils.numberFromBytes(Constants.HEADER_CHUNK_DIVISION);
 		const tickDuration = quarterTicks * Utils.getDurationMultiplier(duration);
 		return Utils.getRoundedIfClose(tickDuration)
 	}

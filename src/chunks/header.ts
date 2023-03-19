@@ -1,3 +1,4 @@
+import {Chunk} from './chunk';
 import {Constants} from '../constants';
 import {Utils} from '../utils';
 

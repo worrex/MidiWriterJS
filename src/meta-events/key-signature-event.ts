@@ -1,4 +1,5 @@
 import {Constants} from '../constants';
+import {MetaEvent} from './meta-event';
 import {Utils} from '../utils';
 
 /**
@@ -15,17 +16,17 @@ class KeySignatureEvent implements MetaEvent {
 		this.name = 'KeySignatureEvent';
 		this.type = 0x59;
 
-		var mode = mi || 0;
+		let mode = mi || 0;
 		sf = sf || 0;
 
 		//	Function called with string notation
 		if (typeof mi === 'undefined') {
-			var fifths = [
+			const fifths = [
 				['Cb', 'Gb', 'Db', 'Ab', 'Eb', 'Bb', 'F', 'C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#'],
 				['ab', 'eb', 'bb', 'f', 'c', 'g', 'd', 'a', 'e', 'b', 'f#', 'c#', 'g#', 'd#', 'a#']
 			];
-			var _sflen = sf.length;
-			var note = sf || 'C';
+			const _sflen = sf.length;
+			let note = sf || 'C';
 
 			if (sf[0] === sf[0].toLowerCase()) mode = 1
 
@@ -54,7 +55,7 @@ class KeySignatureEvent implements MetaEvent {
 				}
 			}
 
-			var fifthindex = fifths[mode].indexOf(note);
+			const fifthindex = fifths[mode].indexOf(note);
 			sf = fifthindex === -1 ? 0 : fifthindex - 7;
 		}
 

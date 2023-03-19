@@ -1,3 +1,5 @@
+import { AbstractEvent } from '../abstract-event';
+import {Chunk} from './chunk';
 import {Constants} from '../constants';
 import {ControllerChangeEvent} from '../midi-events/controller-change-event';
 import {CopyrightEvent} from '../meta-events/copyright-event';
@@ -52,7 +54,7 @@ class Track implements Chunk {
 	 * @param {Function} mapFunction - Callback which can be used to apply specific properties to all events.
 	 * @return {Track}
 	 */
-	addEvent(events: (AbstractEvent|AbstractEvent[]), mapFunction?: Function): Track {
+	addEvent(events: (AbstractEvent|AbstractEvent[]), mapFunction?: (i: number, event: AbstractEvent) => object): Track {
 		Utils.toArray(events).forEach((event, i) => {
 			if (event instanceof NoteEvent) {
 				// Handle map function if provided
@@ -180,7 +182,7 @@ class Track implements Chunk {
 			lastEventIndex = i;
 		}
 
-		let splicedEventIndex = lastEventIndex + 1;
+		const splicedEventIndex = lastEventIndex + 1;
 
 		// Need to adjust the delta of this event to ensure it falls on the correct tick.
 		event.delta = event.tick - this.events[lastEventIndex].tick;
@@ -217,7 +219,7 @@ class Track implements Chunk {
 	 * @param {number} tick - Start tick.
 	 * @return {Track}
 	 */
-	setTempo(bpm: number, tick: number = 0): Track {
+	setTempo(bpm: number, tick = 0): Track {
 		return this.addEvent(new TempoEvent({bpm, tick}));
 	}
 
