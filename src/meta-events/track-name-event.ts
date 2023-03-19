@@ -6,7 +6,7 @@ import {Utils} from '../utils';
  * @param {object} fields {text: string, delta: integer}
  * @return {TrackNameEvent}
  */
-class TrackNameEvent implements MetaEvent, AbstractEvent {
+class TrackNameEvent implements MetaEvent {
 	data: number[];
 	delta: number;
 	name: string;

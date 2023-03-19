@@ -7,7 +7,7 @@ import {Utils} from '../utils';
  * @param {object} fields { bend : float, channel : int, delta: int }
  * @return {PitchBendEvent}
  */
-class PitchBendEvent implements MidiEvent, AbstractEvent {
+class PitchBendEvent implements MidiEvent {
 	channel: number;
 	data: number[];
 	delta: number;

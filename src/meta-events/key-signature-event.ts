@@ -5,7 +5,7 @@ import {Utils} from '../utils';
  * Object representation of a key signature meta event.
  * @return {KeySignatureEvent}
  */
-class KeySignatureEvent implements MetaEvent, AbstractEvent {
+class KeySignatureEvent implements MetaEvent {
 	data: number[];
 	delta: number;
 	name: string;

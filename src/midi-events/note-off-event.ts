@@ -5,7 +5,7 @@ import {Utils} from '../utils';
  * @param {object} fields {data: []}
  * @return {NoteOffEvent}
  */
-class NoteOffEvent implements MidiEvent, AbstractEvent {
+class NoteOffEvent implements MidiEvent {
 	channel: number;
 	data: number[];
 	delta: number;
@@ -17,15 +17,14 @@ class NoteOffEvent implements MidiEvent, AbstractEvent {
 	duration: string|number;
 	tick: number;
 
-	constructor(fields: { channel: number; duration: string|number; velocity: number; pitch: string|number; tick?: number; data?: number[]; }) {
+	constructor(fields: { channel: number; duration: string|number; velocity: number; pitch: string|number; tick?: number; data?: number[]; delta?: number }) {
 		this.name = 'NoteOffEvent';
 		this.channel = fields.channel || 1;
 		this.pitch = fields.pitch;
-		this.duration = fields.duration;
 		this.velocity = fields.velocity || 50;
 		this.tick = fields.tick || null;
 		this.data = fields.data;
-		this.delta = Utils.getTickDuration(this.duration);
+		this.delta = fields.delta || Utils.getTickDuration(fields.duration);
 		this.status = 0x80;
 	}
 
@@ -34,7 +33,7 @@ class NoteOffEvent implements MidiEvent, AbstractEvent {
 	 * @param {Track} track - parent track
 	 * @return {NoteOffEvent}
 	 */
-	buildData(track, precisionDelta, options: {middleC?: string} = {}) {
+	buildData(track, precisionDelta: number, options: {middleC?: string} = {}) {
 		if (this.tick === null) {
 			this.tick = Utils.getRoundedIfClose(this.delta + track.tickPointer);
 		}

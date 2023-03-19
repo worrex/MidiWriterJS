@@ -30,7 +30,7 @@ class NoteEvent implements AbstractEvent {
 		this.pitch = Utils.toArray(fields.pitch);
 
 		this.channel = fields.channel || 1;
-		this.duration = fields.duration;
+		this.duration = fields.duration || '4';
 		this.grace = fields.grace;
 		this.repeat = fields.repeat || 1;
 		this.sequential = fields.sequential || false;
@@ -78,6 +78,7 @@ class NoteEvent implements AbstractEvent {
 						noteOnNew = new NoteOnEvent({
 							channel: this.channel,
 							wait: this.wait,
+							delta: Utils.getTickDuration(this.wait),
 							velocity: this.velocity,
 							pitch: p,
 							tick: this.tick,
@@ -89,6 +90,7 @@ class NoteEvent implements AbstractEvent {
 						noteOnNew = new NoteOnEvent({
 							channel: this.channel,
 							wait: 0,
+							delta: 0,
 							velocity: this.velocity,
 							pitch: p,
 							tick: this.tick,
@@ -113,7 +115,7 @@ class NoteEvent implements AbstractEvent {
 						});
 
 					} else {
-						// Running status (can ommit the note off status)
+						// Running status (can omit the note off status)
 						//noteOff = new NoteOffEvent({data: [0, Utils.getPitch(p), Utils.convertVelocity(this.velocity)]});
 						noteOffNew = new NoteOffEvent({
 							channel: this.channel,
@@ -135,6 +137,7 @@ class NoteEvent implements AbstractEvent {
 					const noteOnNew = new NoteOnEvent({
 						channel: this.channel,
 						wait: (i > 0 ? 0 : this.wait), // wait only applies to first note in repetition
+						delta: (i > 0 ? 0 : Utils.getTickDuration(this.wait)),
 						velocity: this.velocity,
 						pitch: p,
 						tick: this.tick,

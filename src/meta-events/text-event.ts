@@ -6,7 +6,7 @@ import {Utils} from '../utils';
  * @param {object} fields {text: string, delta: integer}
  * @return {TextEvent}
  */
-class TextEvent implements MetaEvent, AbstractEvent {
+class TextEvent implements MetaEvent {
 	data: number[];
 	delta: number;
 	name: string;

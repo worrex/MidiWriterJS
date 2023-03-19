@@ -6,11 +6,11 @@ import {Utils} from '../utils';
  * @param {object} fields {delta: integer}
  * @return {EndTrackEvent}
  */
-class EndTrackEvent implements MetaEvent, AbstractEvent {
+class EndTrackEvent implements MetaEvent {
 	data: number[];
 	delta: number;
-	type: [0x2F, 0x00];
 	name: string;
+	type: [0x2F, 0x00];
 
 	constructor(fields?: { delta: number; }) {
 		this.delta = fields?.delta || 0x00;

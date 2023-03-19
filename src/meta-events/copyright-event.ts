@@ -6,18 +6,18 @@ import {Utils} from '../utils';
  * @param {object} fields {text: string, delta: integer}
  * @return {CopyrightEvent}
  */
-class CopyrightEvent implements MetaEvent, AbstractEvent {
+class CopyrightEvent implements MetaEvent {
 	data: number[];
 	delta: number;
-	type: 0x02;
 	name: string;
 	text: string;
+	type: 0x02;
 
 	constructor(fields: { text: string; delta?: number; }) {
-		this.text = fields.text;
 		this.delta = fields.delta || 0x00;
-		this.type = 0x02;
 		this.name = 'CopyrightEvent';
+		this.text = fields.text;
+		this.type = 0x02;
 
 		const textBytes = Utils.stringToBytes(this.text);
 

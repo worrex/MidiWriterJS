@@ -6,17 +6,17 @@ import {Utils} from '../utils';
  * @param {object} fields {text: string, delta: integer}
  * @return {InstrumentNameEvent}
  */
-class InstrumentNameEvent implements MetaEvent, AbstractEvent {
+class InstrumentNameEvent implements MetaEvent {
 	data: number[];
 	delta: number;
 	name: string;
-	type: 0x04;
 	text: string;
+	type: 0x04;
 
 	constructor(fields: { text: string; delta?: number; }) {
 		this.delta = fields.delta || 0x00;
-		this.text = fields.text;
 		this.name = 'InstrumentNameEvent';
+		this.text = fields.text;
 		this.type = 0x04;
 
 		const textBytes = Utils.stringToBytes(this.text);

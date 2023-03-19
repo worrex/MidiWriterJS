@@ -6,7 +6,7 @@ import {Utils} from '../utils.js';
  * @param {object} fields {controllerNumber: integer, controllerValue: integer, delta: integer}
  * @return {ControllerChangeEvent}
  */
-class ControllerChangeEvent implements MidiEvent, AbstractEvent {
+class ControllerChangeEvent implements MidiEvent {
 	channel: number;
 	data: number[];
 	delta: number;

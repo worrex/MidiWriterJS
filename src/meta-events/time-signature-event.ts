@@ -5,7 +5,7 @@ import {Utils} from '../utils';
  * Object representation of a time signature meta event.
  * @return {TimeSignatureEvent}
  */
-class TimeSignatureEvent implements MetaEvent, AbstractEvent {
+class TimeSignatureEvent implements MetaEvent {
 	data: number[];
 	delta: number;
 	name: string;

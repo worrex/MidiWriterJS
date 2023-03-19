@@ -5,7 +5,7 @@ import {Utils} from '../utils';
  * @param {object} fields {data: []}
  * @return {NoteOnEvent}
  */
-class NoteOnEvent implements MidiEvent, AbstractEvent {
+class NoteOnEvent implements MidiEvent {
 	channel: number;
 	data: number[];
 	delta: number;
@@ -17,7 +17,7 @@ class NoteOnEvent implements MidiEvent, AbstractEvent {
 	tick: number;
 	deltaWithPrecisionCorrection: number;
 
-	constructor(fields: { channel?: number; wait?: string|number; velocity?: number; pitch?: string|string[]|number|number[]; tick?: number; data?: number[]; }) {
+	constructor(fields: { channel?: number; wait?: string|number; velocity?: number; pitch?: string|string[]|number|number[]; tick?: number; data?: number[]; delta?: number }) {
 		this.name 		= 'NoteOnEvent';
 		this.channel 	= fields.channel || 1;
 		this.pitch 		= fields.pitch;

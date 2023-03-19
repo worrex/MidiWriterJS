@@ -6,7 +6,7 @@ import {Utils} from '../utils';
  * @param {object} fields {bpm: integer, delta: integer}
  * @return {TempoEvent}
  */
-class TempoEvent implements MetaEvent, AbstractEvent {
+class TempoEvent implements MetaEvent {
 	data: number[];
 	delta: number;
 	name: string;

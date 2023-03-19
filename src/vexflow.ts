@@ -79,7 +79,7 @@ class VexFlow {
 	 * @param duration Vexflow duration
 	 * @returns MidiWriterJS duration
 	 */
-	convertBaseDuration(duration) {
+	convertBaseDuration(duration: string): string {
 		switch (duration) {
 			case 'w':
 				return '1';

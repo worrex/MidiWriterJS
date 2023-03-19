@@ -54,7 +54,10 @@ class Writer {
 	 * @return {string}
 	 */
 	base64(): string {
-		if (typeof btoa === 'function') return btoa(String.fromCharCode.apply(null, this.buildFile()));
+		if (typeof btoa === 'function') {
+			return btoa(String.fromCharCode.apply(null, this.buildFile()));
+		}
+
 		return Buffer.from(this.buildFile()).toString('base64');
 	}
 

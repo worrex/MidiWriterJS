@@ -230,6 +230,18 @@ describe('MidiWriterJS', function() {
 			const write = new MidiWriter.Writer(track);
 			assert.equal('TVRoZAAAAAYAAAABAIBNVHJrAAAAHgCQSEAAkExAAJBDQIEAgEhAAIBMQACAQ0CnCP8vAA==', write.base64());
 		})
+
+		it('should return specific base64 string when removing events by name', function() {
+			const track = new MidiWriter.Track();
+
+			track.addEvent(new MidiWriter.CopyrightEvent({text: "Garrett Grimm"}));
+			track.removeEventsByName('CopyrightEvent');
+			track.addEvent(new MidiWriter.NoteEvent({pitch: ["C4", "D4", "E4"], sequential: true}));
+			
+			const write = new MidiWriter.Writer([track]);
+
+			assert.equal('TVRoZAAAAAYAAAABAIBNVHJrAAAAHwCQPECBAIA8QACQPkCBAIA+QACQQECBAIBAQAD/LwA=', write.base64());
+		});
 	});
 
 	describe('#Utils()', function() {

@@ -137,7 +137,7 @@ class Track implements Chunk {
 			// Need to change based on what comes before them after the splice.
 			noteEvent.buildData().events.forEach((e) => e.buildData(this));
 
-			// Merge each event indivually into this track's event list.
+			// Merge each event individually into this track's event list.
 			noteEvent.events.forEach((event) => this.mergeSingleEvent(event));
 		});
 
