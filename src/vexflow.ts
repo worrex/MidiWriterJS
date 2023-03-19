@@ -7,8 +7,8 @@ class VexFlow {
 	 * Support for converting VexFlow voice into MidiWriterJS track
 	 * @return MidiWriter.Track object
 	 */
-	trackFromVoice(voice, options = {addRenderedAccidentals: false}) {
-		const track = new Track();
+	trackFromVoice(voice, options = {addRenderedAccidentals: false}): Track {
+		const track = new Track;
 		let wait = [];
 
 		voice.tickables.forEach(tickable => {

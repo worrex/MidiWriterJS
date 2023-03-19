@@ -13,20 +13,18 @@ class NoteOnEvent implements MidiEvent, AbstractEvent {
 	name: string;
 	pitch: string|string[]|number|number[];
 	velocity: number;
-	startTick: number;
 	wait: string|number;
 	tick: number;
 	deltaWithPrecisionCorrection: number;
 
-	constructor(fields: { channel?: number; wait?: string|number; velocity?: number; pitch?: string|string[]|number|number[]; startTick?: number; data?: number[]; }) {
+	constructor(fields: { channel?: number; wait?: string|number; velocity?: number; pitch?: string|string[]|number|number[]; tick?: number; data?: number[]; }) {
 		this.name 		= 'NoteOnEvent';
 		this.channel 	= fields.channel || 1;
 		this.pitch 		= fields.pitch;
 		this.wait 		= fields.wait || 0;
 		this.velocity 	= fields.velocity || 50;
-		this.startTick 	= fields.startTick || null;
 
-		this.tick 		= null;
+		this.tick 		= fields.tick || null;
 		this.delta 		= null;
 		this.data 		= fields.data;
 		this.status = 0x90;
@@ -41,8 +39,8 @@ class NoteOnEvent implements MidiEvent, AbstractEvent {
 		this.data = [];
 
 		// Explicitly defined startTick event
-		if (this.startTick) {
-			this.tick = Utils.getRoundedIfClose(this.startTick);
+		if (this.tick) {
+			this.tick = Utils.getRoundedIfClose(this.tick);
 
 			// If this is the first event in the track then use event's starting tick as delta.
 			if (track.tickPointer == 0) {

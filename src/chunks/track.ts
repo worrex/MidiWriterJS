@@ -46,6 +46,8 @@ class Track implements Chunk {
 	 * Adds any event type to the track.
 	 * Events without a specific startTick property are assumed to be added in order of how they should output.
 	 * Events with a specific startTick property are set aside for now will be merged in during build process.
+	 * 
+	 * TODO: Don't put startTick events in their own array.  Just lump everything together and sort it out during buildData();
 	 * @param {(NoteEvent|ProgramChangeEvent)} events - Event object or array of Event objects.
 	 * @param {Function} mapFunction - Callback which can be used to apply specific properties to all events.
 	 * @return {Track}
@@ -58,39 +60,18 @@ class Track implements Chunk {
 					const properties = mapFunction(i, event);
 
 					if (typeof properties === 'object') {
-						for (var j in properties) {
-							switch(j) {
-								case 'channel':
-									event.channel = properties[j];
-									break;
-								case 'duration':
-									event.duration = properties[j];
-									break;
-								case 'sequential':
-									event.sequential = properties[j];
-									break;
-								case 'velocity':
-									event.velocity = Utils.convertVelocity(properties[j]);
-									break;
-							}
-						}
+						Object.assign(event, properties);
 					}
 				}
 
 				// If this note event has an explicit startTick then we need to set aside for now
-				if (event.startTick !== null) {
+				if (event.tick !== null) {
 					this.explicitTickEvents.push(event);
 
 				} else {
 					// Push each on/off event to track's event stack
 					event.buildData().events.forEach((e) => this.events.push(e));
 				}
-
-			} else if (event instanceof EndTrackEvent) {
-				// Only one EndTrackEvent is allowed, so remove
-				// any existing ones before adding.
-				this.removeEventsByName('EndTrackEvent');
-				this.events.push(event);
 
 			} else {
 				this.events.push(event);
@@ -106,11 +87,6 @@ class Track implements Chunk {
 	 * @return {Track}
 	 */
 	buildData(options = {}) {
-		// If the last event isn't EndTrackEvent, then tack it onto the data.
-		if (!this.events.length || !(this.events[this.events.length - 1] instanceof EndTrackEvent)) {
-			this.addEvent(new EndTrackEvent);
-		}
-
 		// Reset
 		this.data = [];
 		this.size = [];
@@ -137,6 +113,11 @@ class Track implements Chunk {
 
 		this.mergeExplicitTickEvents();
 
+		// If the last event isn't EndTrackEvent, then tack it onto the data.
+		if (!this.events.length || !(this.events[this.events.length - 1] instanceof EndTrackEvent)) {
+			this.data = this.data.concat((new EndTrackEvent).data);
+		}
+
 		this.size = Utils.numberToBytes(this.data.length, 4); // 4 bytes long
 		return this;
 	}
@@ -145,7 +126,7 @@ class Track implements Chunk {
 		if (!this.explicitTickEvents.length) return;
 
 		// First sort asc list of events by startTick
-		this.explicitTickEvents.sort((a, b) => a.startTick - b.startTick);
+		this.explicitTickEvents.sort((a, b) => a.tick - b.tick);
 
 		// Now this.explicitTickEvents is in correct order, and so is this.events naturally.
 		// For each explicit tick event, splice it into the main list of events and

@@ -16,7 +16,7 @@ class NoteEvent implements AbstractEvent {
 	grace: string|string[];
 	channel: number;
 	repeat: number;
-	startTick: number;
+	tick: number;
 	duration: string;
 	sequential: boolean;
 	wait: string;
@@ -25,28 +25,18 @@ class NoteEvent implements AbstractEvent {
 	restDuration: number;
 
 	constructor(fields) {
-		// Set default fields
-		fields = Object.assign({
-			channel: 1,
-			repeat: 1,
-			sequential: false,
-			startTick: null,
-			velocity: 50,
-			wait: 0,
-		}, fields);
+		this.data = [];
+		this.name = 'NoteEvent';
+		this.pitch = Utils.toArray(fields.pitch);
 
-		this.data 		= [];
-		this.name 		= 'NoteEvent';
-		this.pitch 		= Utils.toArray(fields.pitch);
-
-		this.channel 	= fields.channel;
-		this.duration 	= fields.duration;
-		this.grace		= fields.grace;
-		this.repeat 	= fields.repeat;
-		this.sequential = fields.sequential;
-		this.startTick	= fields.startTick;
-		this.velocity 	= fields.velocity;
-		this.wait 		= fields.wait;
+		this.channel = fields.channel || 1;
+		this.duration = fields.duration;
+		this.grace = fields.grace;
+		this.repeat = fields.repeat || 1;
+		this.sequential = fields.sequential || false;
+		this.tick = fields.startTick || fields.tick || null;
+		this.velocity = fields.velocity || 50;
+		this.wait = fields.wait || 0;
 
 		this.tickDuration = Utils.getTickDuration(this.duration);
 		this.restDuration = Utils.getTickDuration(this.wait);
@@ -90,7 +80,7 @@ class NoteEvent implements AbstractEvent {
 							wait: this.wait,
 							velocity: this.velocity,
 							pitch: p,
-							startTick: this.startTick
+							tick: this.tick,
 						});
 
 					} else {
@@ -101,7 +91,7 @@ class NoteEvent implements AbstractEvent {
 							wait: 0,
 							velocity: this.velocity,
 							pitch: p,
-							startTick: this.startTick
+							tick: this.tick,
 						});
 					}
 
@@ -119,7 +109,7 @@ class NoteEvent implements AbstractEvent {
 							duration: this.duration,
 							velocity: this.velocity,
 							pitch: p,
-							tick: this.startTick !== null ? Utils.getTickDuration(this.duration) + this.startTick : null,
+							tick: this.tick !== null ? Utils.getTickDuration(this.duration) + this.tick : null,
 						});
 
 					} else {
@@ -130,7 +120,7 @@ class NoteEvent implements AbstractEvent {
 							duration: 0,
 							velocity: this.velocity,
 							pitch: p,
-							tick: this.startTick !== null ? Utils.getTickDuration(this.duration) + this.startTick : null,
+							tick: this.tick !== null ? Utils.getTickDuration(this.duration) + this.tick : null,
 						});
 					}
 
@@ -147,7 +137,7 @@ class NoteEvent implements AbstractEvent {
 						wait: (i > 0 ? 0 : this.wait), // wait only applies to first note in repetition
 						velocity: this.velocity,
 						pitch: p,
-						startTick: this.startTick,
+						tick: this.tick,
 					});
 
 					const noteOffNew = new NoteOffEvent({

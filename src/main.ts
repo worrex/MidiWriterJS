@@ -1,5 +1,6 @@
 import {Constants} from './constants';
 import {ControllerChangeEvent} from './midi-events/controller-change-event';
+import {CopyrightEvent} from './meta-events/copyright-event';
 import {CuePointEvent} from './meta-events/cue-point-event';
 import {EndTrackEvent} from './meta-events/end-track-event';
 import {InstrumentNameEvent} from './meta-events/instrument-name-event';
@@ -23,6 +24,7 @@ import {Writer} from './writer';
 export default {
   Constants,
   ControllerChangeEvent,
+  CopyrightEvent,
   CuePointEvent,
   EndTrackEvent,
   InstrumentNameEvent,
