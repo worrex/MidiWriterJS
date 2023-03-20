@@ -1,3 +1,5 @@
+import {AbstractEvent} from '../abstract-event';
+import {MidiEvent} from './midi-event';
 import {NoteOnEvent} from './note-on-event';
 import {NoteOffEvent} from './note-off-event';
 import {Utils} from '../utils';
@@ -7,30 +9,36 @@ import {Utils} from '../utils';
  * @param {object} fields - {pitch: '[C4]', duration: '4', wait: '4', velocity: 1-100}
  * @return {NoteEvent}
  */
-class NoteEvent {
+class NoteEvent implements AbstractEvent {
+	data: number[];
+	delta: number;
+	events: MidiEvent[];
+	name: string;
+	pitch: string[];
+	grace: string|string[];
+	channel: number;
+	repeat: number;
+	tick: number;
+	duration: string;
+	sequential: boolean;
+	wait: string;
+	velocity: number;
+	tickDuration: number;
+	restDuration: number;
+
 	constructor(fields) {
-		// Set default fields
-		fields = Object.assign({
-			channel: 1,
-			repeat: 1,
-			sequential: false,
-			startTick: null,
-			velocity: 50,
-			wait: 0,
-		}, fields);
+		this.data = [];
+		this.name = 'NoteEvent';
+		this.pitch = Utils.toArray(fields.pitch);
 
-		this.data 		= [];
-		this.type 		= 'note';
-		this.pitch 		= Utils.toArray(fields.pitch);
-
-		this.channel 	= fields.channel;
-		this.duration 	= fields.duration;
-		this.grace		= fields.grace;
-		this.repeat 	= fields.repeat;
-		this.sequential = fields.sequential;
-		this.startTick	= fields.startTick;
-		this.velocity 	= fields.velocity;
-		this.wait 		= fields.wait;
+		this.channel = fields.channel || 1;
+		this.duration = fields.duration || '4';
+		this.grace = fields.grace;
+		this.repeat = fields.repeat || 1;
+		this.sequential = fields.sequential || false;
+		this.tick = fields.startTick || fields.tick || null;
+		this.velocity = fields.velocity || 50;
+		this.wait = fields.wait || 0;
 
 		this.tickDuration = Utils.getTickDuration(this.duration);
 		this.restDuration = Utils.getTickDuration(this.wait);
@@ -42,16 +50,16 @@ class NoteEvent {
 	 * Builds int array for this event.
 	 * @return {NoteEvent}
 	 */
-	buildData() {
+	buildData(): NoteEvent {
 		// Reset data array
 		this.data = [];
 
 		// Apply grace note(s) and subtract ticks (currently 1 tick per grace note) from tickDuration so net value is the same
 		if (this.grace) {
-			let graceDuration = 1;
+			const graceDuration = 1;
 			this.grace = Utils.toArray(this.grace);
 			this.grace.forEach(() => {
-				let noteEvent = new NoteEvent({pitch: this.grace, duration:'T' + graceDuration});
+				const noteEvent = new NoteEvent({pitch: this.grace, duration:'T' + graceDuration});
 				this.data = this.data.concat(noteEvent.data);
 			});
 		}
@@ -72,9 +80,10 @@ class NoteEvent {
 						noteOnNew = new NoteOnEvent({
 							channel: this.channel,
 							wait: this.wait,
+							delta: Utils.getTickDuration(this.wait),
 							velocity: this.velocity,
 							pitch: p,
-							startTick: this.startTick
+							tick: this.tick,
 						});
 
 					} else {
@@ -83,9 +92,10 @@ class NoteEvent {
 						noteOnNew = new NoteOnEvent({
 							channel: this.channel,
 							wait: 0,
+							delta: 0,
 							velocity: this.velocity,
 							pitch: p,
-							startTick: this.startTick
+							tick: this.tick,
 						});
 					}
 
@@ -103,18 +113,18 @@ class NoteEvent {
 							duration: this.duration,
 							velocity: this.velocity,
 							pitch: p,
-							tick: this.startTick !== null ? Utils.getTickDuration(this.duration) + this.startTick : null,
+							tick: this.tick !== null ? Utils.getTickDuration(this.duration) + this.tick : null,
 						});
 
 					} else {
-						// Running status (can ommit the note off status)
+						// Running status (can omit the note off status)
 						//noteOff = new NoteOffEvent({data: [0, Utils.getPitch(p), Utils.convertVelocity(this.velocity)]});
 						noteOffNew = new NoteOffEvent({
 							channel: this.channel,
 							duration: 0,
 							velocity: this.velocity,
 							pitch: p,
-							tick: this.startTick !== null ? Utils.getTickDuration(this.duration) + this.startTick : null,
+							tick: this.tick !== null ? Utils.getTickDuration(this.duration) + this.tick : null,
 						});
 					}
 
@@ -129,9 +139,10 @@ class NoteEvent {
 					const noteOnNew = new NoteOnEvent({
 						channel: this.channel,
 						wait: (i > 0 ? 0 : this.wait), // wait only applies to first note in repetition
+						delta: (i > 0 ? 0 : Utils.getTickDuration(this.wait)),
 						velocity: this.velocity,
 						pitch: p,
-						startTick: this.startTick,
+						tick: this.tick,
 					});
 
 					const noteOffNew = new NoteOffEvent({

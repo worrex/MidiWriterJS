@@ -1,25 +1,32 @@
 import {Constants} from '../constants';
+import {MetaEvent} from './meta-event';
 import {Utils} from '../utils';
 
 /**
  * Object representation of a key signature meta event.
  * @return {KeySignatureEvent}
  */
-class KeySignatureEvent {
-	constructor(sf, mi) {
-		this.type = 'key-signature';
+class KeySignatureEvent implements MetaEvent {
+	data: number[];
+	delta: number;
+	name: string;
+	type: 0x59;
 
-		var mode = mi || 0;
+	constructor(sf, mi) {
+		this.name = 'KeySignatureEvent';
+		this.type = 0x59;
+
+		let mode = mi || 0;
 		sf = sf || 0;
 
 		//	Function called with string notation
 		if (typeof mi === 'undefined') {
-			var fifths = [
+			const fifths = [
 				['Cb', 'Gb', 'Db', 'Ab', 'Eb', 'Bb', 'F', 'C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#'],
 				['ab', 'eb', 'bb', 'f', 'c', 'g', 'd', 'a', 'e', 'b', 'f#', 'c#', 'g#', 'd#', 'a#']
 			];
-			var _sflen = sf.length;
-			var note = sf || 'C';
+			const _sflen = sf.length;
+			let note = sf || 'C';
 
 			if (sf[0] === sf[0].toLowerCase()) mode = 1
 
@@ -48,14 +55,14 @@ class KeySignatureEvent {
 				}
 			}
 
-			var fifthindex = fifths[mode].indexOf(note);
+			const fifthindex = fifths[mode].indexOf(note);
 			sf = fifthindex === -1 ? 0 : fifthindex - 7;
 		}
 
 		// Start with zero time delta
 		this.data = Utils.numberToVariableLength(0x00).concat(
 			Constants.META_EVENT_ID,
-			Constants.META_KEY_SIGNATURE_ID,
+			this.type,
 			[0x02], // Size
 			Utils.numberToBytes(sf, 1), // Number of sharp or flats ( < 0 flat; > 0 sharp)
 			Utils.numberToBytes(mode, 1), // Mode: 0 major, 1 minor

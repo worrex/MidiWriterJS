@@ -17,6 +17,7 @@ npm install midi-writer-js
 ```
 Getting Started
 ------------
+
 ```javascript
 import MidiWriter from 'midi-writer-js';
 
@@ -36,7 +37,12 @@ console.log(write.dataUri());
 ```
 Documentation
 ------------
+
 ### `MidiWriter.Track()`
+
+The MIDI spec defines that each note must have a `NoteOnEvent` and `NoteOffEvent` (or `NoteOnEvent` with zero velocity) event, marking the beginning and end of the sounding note.  While it's possible to manually add these events to a track with `Track.addEvent()`, the `NoteEvent` provides a more intuitive interface for doing this with a single, "pseudo" event.  Under the hood, the `NoteEvent` event generates the relevant `NoteOnEvent` and `NoteOffEvent` events.
+
+Each MIDI event has a `delta` property, which is used to define the number of ticks to wait after the previous event.  This can be challenging to calculate if you're not necessarily adding events in a serial fashion.  Because of this, you can alternatively use the `tick` property to define the exact tick where the event should fall.
 
 - `addEvent({event}, mapFunction)`
 - `setTempo(tempo)`
@@ -134,7 +140,7 @@ The `NoteEvent` supports these options:
 			<td>Grace note to be applied to note event.  Takes same value format as <code>pitch</code></td>
 		</tr>
 		<tr>
-			<td><b>startTick</b></td>
+			<td><b>tick</b></td>
 			<td>number</td>
 			<td></td>
 			<td>Specific tick where this event should be played.  If this parameter is supplied then <code>wait</code> is disregarded if also supplied.</td>

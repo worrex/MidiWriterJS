@@ -1,4 +1,5 @@
-import {HeaderChunk} from './header-chunk';
+import {Header} from './chunks/header';
+import {Track} from './chunks/track';
 import {Utils} from './utils';
 
 /**
@@ -8,6 +9,9 @@ import {Utils} from './utils';
  * @return {Writer}
  */
 class Writer {
+	tracks: Track[];
+	options: object;
+
 	constructor(tracks, options = {}) {
 		// Ensure tracks is an array
 		this.tracks = Utils.toArray(tracks);
@@ -20,7 +24,7 @@ class Writer {
 	 */
 	buildData() {
 		const data = [];
-		data.push(new HeaderChunk(this.tracks.length))
+		data.push(new Header(this.tracks.length))
 
 		// For each track add final end of track event and build data
 		this.tracks.forEach((track) => {
@@ -34,8 +38,8 @@ class Writer {
 	 * Builds the file into a Uint8Array
 	 * @return {Uint8Array}
 	 */
-	buildFile() {
-		var build = [];
+	buildFile(): Uint8Array {
+		let build = [];
 
 		// Data consists of chunks which consists of data
 		this.buildData().forEach((d) => build = build.concat(d.type, d.size, d.data));
@@ -47,8 +51,11 @@ class Writer {
 	 * Convert file buffer to a base64 string.  Different methods depending on if browser or node.
 	 * @return {string}
 	 */
-	base64() {
-		if (typeof btoa === 'function') return btoa(String.fromCharCode.apply(null, this.buildFile()));
+	base64(): string {
+		if (typeof btoa === 'function') {
+			return btoa(String.fromCharCode.apply(null, this.buildFile()));
+		}
+
 		return Buffer.from(this.buildFile()).toString('base64');
 	}
 
@@ -56,7 +63,7 @@ class Writer {
      * Get the data URI.
      * @return {string}
      */
-    dataUri() {
+    dataUri(): string {
 		return 'data:audio/midi;base64,' + this.base64();
     }
 
@@ -67,7 +74,7 @@ class Writer {
 	 * @param {any} value
 	 * @return {Writer}
 	 */
-	setOption(key, value) {
+	setOption(key: string, value: number|string): Writer {
 		this.options[key] = value;
 		return this;
 	}

@@ -1,5 +1,5 @@
-import {NoteEvent} from './note-events/note-event';
-import {Track} from './track';
+import {NoteEvent} from './midi-events/note-event';
+import {Track} from './chunks/track';
 
 class VexFlow {
 
@@ -7,8 +7,8 @@ class VexFlow {
 	 * Support for converting VexFlow voice into MidiWriterJS track
 	 * @return MidiWriter.Track object
 	 */
-	trackFromVoice(voice, options = {addRenderedAccidentals: false}) {
-		const track = new Track();
+	trackFromVoice(voice, options = {addRenderedAccidentals: false}): Track {
+		const track = new Track;
 		let wait = [];
 
 		voice.tickables.forEach(tickable => {
@@ -79,7 +79,7 @@ class VexFlow {
 	 * @param duration Vexflow duration
 	 * @returns MidiWriterJS duration
 	 */
-	convertBaseDuration(duration) {
+	convertBaseDuration(duration: string): string {
 		switch (duration) {
 			case 'w':
 				return '1';
