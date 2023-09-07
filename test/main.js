@@ -109,6 +109,13 @@ describe('MidiWriterJS', function() {
 			assert.equal('TVRoZAAAAAYAAAABAIBNVHJrAAAACACwAX8A/y8A', write.base64());
 		});
 
+		it('should return specific base64 string when adding a controller change event with channel and delta specified', function() {
+			const track = new MidiWriter.Track();
+			track.controllerChange(1, 127, 16, 256);
+			const write = new MidiWriter.Writer(track);
+			assert.equal('TVRoZAAAAAYAAAABAIBNVHJrAAAACYIAvwF/AP8vAA==', write.base64());
+		});
+
 		it('should create 3 triplet eights followed by a quarter - on correct ticks', function() {
 			const track = new MidiWriter.Track();
 			track.addEvent([
@@ -237,7 +244,7 @@ describe('MidiWriterJS', function() {
 			track.addEvent(new MidiWriter.CopyrightEvent({text: "Garrett Grimm"}));
 			track.removeEventsByName('CopyrightEvent');
 			track.addEvent(new MidiWriter.NoteEvent({pitch: ["C4", "D4", "E4"], sequential: true}));
-			
+
 			const write = new MidiWriter.Writer([track]);
 
 			assert.equal('TVRoZAAAAAYAAAABAIBNVHJrAAAAHwCQPECBAIA8QACQPkCBAIA+QACQQECBAIBAQAD/LwA=', write.base64());
