@@ -5,7 +5,7 @@
   "main": "build/index.js",
   "types": "types.d.ts",
   "dependencies": {
-    "tonal-midi": "^0.69.7"
+    "@tonaljs/midi": "^4.9.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
