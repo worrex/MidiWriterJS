@@ -1,5 +1,5 @@
 import {Constants} from './constants';
-import {toMidi} from 'tonal-midi';
+import {toMidi} from '@tonaljs/midi';
 
 /**
  * Static utility functions used throughout the library.
@@ -40,7 +40,7 @@ class Utils {
 	 * @param {string} middleC
 	 * @return {number}
 	 */
-	static getPitch(pitch: (string|string[]|number|number[]), middleC = 'C4'): number {
+	static getPitch(pitch: any, middleC = 'C4'): number {
 		return 60 - toMidi(middleC) + toMidi(pitch);
 	}
 
