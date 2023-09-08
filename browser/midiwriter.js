@@ -387,7 +387,7 @@ var MidiWriter = (function () {
      */
     var ControllerChangeEvent = /** @class */ (function () {
         function ControllerChangeEvent(fields) {
-            this.channel = fields.channel || 0;
+            this.channel = fields.channel - 1 || 0;
             this.controllerValue = fields.controllerValue;
             this.controllerNumber = fields.controllerNumber;
             this.delta = fields.delta || 0x00;
@@ -1164,10 +1164,12 @@ var MidiWriter = (function () {
          * Adds a controller change event
          * @param {number} number - Control number.
          * @param {number} value - Control value.
+         * @param {number} channel - Channel to send controller change event on (1-based).
+         * @param {number} delta - Track tick offset for cc event.
          * @return {Track}
          */
-        Track.prototype.controllerChange = function (number, value) {
-            return this.addEvent(new ControllerChangeEvent({ controllerNumber: number, controllerValue: value }));
+        Track.prototype.controllerChange = function (number, value, channel, delta) {
+            return this.addEvent(new ControllerChangeEvent({ controllerNumber: number, controllerValue: value, channel: channel, delta: delta }));
         };
         return Track;
     }());

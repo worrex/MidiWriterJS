@@ -48,7 +48,7 @@ class Track implements Chunk {
 	 * Adds any event type to the track.
 	 * Events without a specific startTick property are assumed to be added in order of how they should output.
 	 * Events with a specific startTick property are set aside for now will be merged in during build process.
-	 * 
+	 *
 	 * TODO: Don't put startTick events in their own array.  Just lump everything together and sort it out during buildData();
 	 * @param {(NoteEvent|ProgramChangeEvent)} events - Event object or array of Event objects.
 	 * @param {Function} mapFunction - Callback which can be used to apply specific properties to all events.
@@ -332,10 +332,12 @@ class Track implements Chunk {
 	 * Adds a controller change event
 	 * @param {number} number - Control number.
 	 * @param {number} value - Control value.
+	 * @param {number} channel - Channel to send controller change event on (1-based).
+	 * @param {number} delta - Track tick offset for cc event.
 	 * @return {Track}
 	 */
-	controllerChange(number: number, value: number): Track {
-		return this.addEvent(new ControllerChangeEvent({controllerNumber: number, controllerValue: value}));
+	controllerChange(number: number, value: number, channel?: number, delta?: number): Track {
+		return this.addEvent(new ControllerChangeEvent({controllerNumber: number, controllerValue: value, channel: channel, delta: delta}));
 	}
 
 }
