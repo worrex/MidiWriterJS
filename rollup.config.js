@@ -31,7 +31,7 @@ export default [
     output: {
       file: 'build/index.js',
       format: 'cjs',
-      exports: 'named',
+      exports: 'default',
     },
     external: ['tonal-midi', 'fs'],
     plugins: [
