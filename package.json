@@ -1,6 +1,6 @@
 {
   "name": "midi-writer-js",
-  "version": "2.1.4",
+  "version": "3.0.0",
   "description": "A library providing an API for generating MIDI files.",
   "main": "build/index.js",
   "types": "types.d.ts",
@@ -30,6 +30,7 @@
     "nyc": "^15.0.1",
     "rollup": "^2.9.0",
     "tslib": "^2.5.0",
+    "typedoc": "^0.25.1",
     "typescript": "^5.0.2",
     "watch": "^1.0.2"
   },
@@ -40,7 +41,7 @@
   },
   "scripts": {
     "build": "mkdir -p build && rollup -c",
-    "docs": "./node_modules/.bin/jsdoc -r src README.md -d ./docs -t ./node_modules/minami",
+    "docs": "npx typedoc --options typedoc.json",
     "lint:js": "eslint 'src/**/**.ts'",
     "prepublishOnly": "npm test",
     "pretest": "npm run build",

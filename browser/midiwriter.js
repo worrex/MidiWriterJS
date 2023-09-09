@@ -1,4 +1,4 @@
-var MidiWriter = (function () {
+var MidiWriter = (function (exports) {
     'use strict';
 
     /**
@@ -6,7 +6,7 @@ var MidiWriter = (function () {
      * @return {Constants}
      */
     var Constants = {
-        VERSION: '2.1.4',
+        VERSION: '3.0.0',
         HEADER_CHUNK_TYPE: [0x4d, 0x54, 0x68, 0x64],
         HEADER_CHUNK_LENGTH: [0x00, 0x00, 0x00, 0x06],
         HEADER_CHUNK_FORMAT0: [0x00, 0x00],
@@ -17,133 +17,109 @@ var MidiWriter = (function () {
         META_SMTPE_OFFSET: 0x54
     };
 
-    function isNum (x) { return typeof x === 'number' }
-    function isStr (x) { return typeof x === 'string' }
-    function isDef (x) { return typeof x !== 'undefined' }
-    function midiToFreq (midi, tuning) {
-      return Math.pow(2, (midi - 69) / 12) * (tuning || 440)
+    // src/utils.ts
+    var fillStr = (s, n) => Array(Math.abs(n) + 1).join(s);
+
+    // src/named.ts
+    function isNamed(src) {
+      return src !== null && typeof src === "object" && typeof src.name === "string" ? true : false;
     }
 
-    var REGEX = /^([a-gA-G])(#{1,}|b{1,}|x{1,}|)(-?\d*)\s*(.*)\s*$/;
-
-    var SEMITONES = [0, 2, 4, 5, 7, 9, 11];
-    /**
-     * Parse a note name in scientific notation an return it's components,
-     * and some numeric properties including midi number and frequency.
-     *
-     * @name parse
-     * @function
-     * @param {String} note - the note string to be parsed
-     * @param {Boolean} isTonic - true the strings it's supposed to contain a note number
-     * and some category (for example an scale: 'C# major'). It's false by default,
-     * but when true, en extra tonicOf property is returned with the category ('major')
-     * @param {Float} tunning - The frequency of A4 note to calculate frequencies.
-     * By default it 440.
-     * @return {Object} the parsed note name or null if not a valid note
-     *
-     * The parsed note name object will ALWAYS contains:
-     * - letter: the uppercase letter of the note
-     * - acc: the accidentals of the note (only sharps or flats)
-     * - pc: the pitch class (letter + acc)
-     * - step: s a numeric representation of the letter. It's an integer from 0 to 6
-     * where 0 = C, 1 = D ... 6 = B
-     * - alt: a numeric representation of the accidentals. 0 means no alteration,
-     * positive numbers are for sharps and negative for flats
-     * - chroma: a numeric representation of the pitch class. It's like midi for
-     * pitch classes. 0 = C, 1 = C#, 2 = D ... 11 = B. Can be used to find enharmonics
-     * since, for example, chroma of 'Cb' and 'B' are both 11
-     *
-     * If the note has octave, the parser object will contain:
-     * - oct: the octave number (as integer)
-     * - midi: the midi number
-     * - freq: the frequency (using tuning parameter as base)
-     *
-     * If the parameter `isTonic` is set to true, the parsed object will contain:
-     * - tonicOf: the rest of the string that follows note name (left and right trimmed)
-     *
-     * @example
-     * var parse = require('note-parser').parse
-     * parse('Cb4')
-     * // => { letter: 'C', acc: 'b', pc: 'Cb', step: 0, alt: -1, chroma: -1,
-     *         oct: 4, midi: 59, freq: 246.94165062806206 }
-     * // if no octave, no midi, no freq
-     * parse('fx')
-     * // => { letter: 'F', acc: '##', pc: 'F##', step: 3, alt: 2, chroma: 7 })
-     */
-    function parse (str, isTonic, tuning) {
-      if (typeof str !== 'string') return null
-      var m = REGEX.exec(str);
-      if (!m || (!isTonic && m[4])) return null
-
-      var p = { letter: m[1].toUpperCase(), acc: m[2].replace(/x/g, '##') };
-      p.pc = p.letter + p.acc;
-      p.step = (p.letter.charCodeAt(0) + 3) % 7;
-      p.alt = p.acc[0] === 'b' ? -p.acc.length : p.acc.length;
-      var pos = SEMITONES[p.step] + p.alt;
-      p.chroma = pos < 0 ? 12 + pos : pos % 12;
-      if (m[3]) { // has octave
-        p.oct = +m[3];
-        p.midi = pos + 12 * (p.oct + 1);
-        p.freq = midiToFreq(p.midi, tuning);
+    // src/pitch.ts
+    function isPitch(pitch) {
+      return pitch !== null && typeof pitch === "object" && typeof pitch.step === "number" && typeof pitch.alt === "number" ? true : false;
+    }
+    var FIFTHS = [0, 2, 4, -1, 1, 3, 5];
+    var STEPS_TO_OCTS = FIFTHS.map(
+      (fifths) => Math.floor(fifths * 7 / 12)
+    );
+    function encode(pitch) {
+      const { step, alt, oct, dir = 1 } = pitch;
+      const f = FIFTHS[step] + 7 * alt;
+      if (oct === void 0) {
+        return [dir * f];
       }
-      if (isTonic) p.tonicOf = m[4];
-      return p
+      const o = oct - STEPS_TO_OCTS[step] - 4 * alt;
+      return [dir * f, dir * o];
     }
 
-    /**
-     * Get midi of a note
-     *
-     * @name midi
-     * @function
-     * @param {String|Integer} note - the note name or midi number
-     * @return {Integer} the midi number of the note or null if not a valid note
-     * or the note does NOT contains octave
-     * @example
-     * var parser = require('note-parser')
-     * parser.midi('A4') // => 69
-     * parser.midi('A') // => null
-     * @example
-     * // midi numbers are bypassed (even as strings)
-     * parser.midi(60) // => 60
-     * parser.midi('60') // => 60
-     */
-    function midi (note) {
-      if ((isNum(note) || isStr(note)) && note >= 0 && note < 128) return +note
-      var p = parse(note);
-      return p && isDef(p.midi) ? p.midi : null
+    // src/note.ts
+    var NoNote = { empty: true, name: "", pc: "", acc: "" };
+    var cache = /* @__PURE__ */ new Map();
+    var stepToLetter = (step) => "CDEFGAB".charAt(step);
+    var altToAcc = (alt) => alt < 0 ? fillStr("b", -alt) : fillStr("#", alt);
+    var accToAlt = (acc) => acc[0] === "b" ? -acc.length : acc.length;
+    function note(src) {
+      const stringSrc = JSON.stringify(src);
+      const cached = cache.get(stringSrc);
+      if (cached) {
+        return cached;
+      }
+      const value = typeof src === "string" ? parse(src) : isPitch(src) ? note(pitchName(src)) : isNamed(src) ? note(src.name) : NoNote;
+      cache.set(stringSrc, value);
+      return value;
+    }
+    var REGEX = /^([a-gA-G]?)(#{1,}|b{1,}|x{1,}|)(-?\d*)\s*(.*)$/;
+    function tokenizeNote(str) {
+      const m = REGEX.exec(str);
+      return [m[1].toUpperCase(), m[2].replace(/x/g, "##"), m[3], m[4]];
+    }
+    var mod = (n, m) => (n % m + m) % m;
+    var SEMI = [0, 2, 4, 5, 7, 9, 11];
+    function parse(noteName) {
+      const tokens = tokenizeNote(noteName);
+      if (tokens[0] === "" || tokens[3] !== "") {
+        return NoNote;
+      }
+      const letter = tokens[0];
+      const acc = tokens[1];
+      const octStr = tokens[2];
+      const step = (letter.charCodeAt(0) + 3) % 7;
+      const alt = accToAlt(acc);
+      const oct = octStr.length ? +octStr : void 0;
+      const coord = encode({ step, alt, oct });
+      const name = letter + acc + octStr;
+      const pc = letter + acc;
+      const chroma = (SEMI[step] + alt + 120) % 12;
+      const height = oct === void 0 ? mod(SEMI[step] + alt, 12) - 12 * 99 : SEMI[step] + alt + 12 * (oct + 1);
+      const midi = height >= 0 && height <= 127 ? height : null;
+      const freq = oct === void 0 ? null : Math.pow(2, (height - 69) / 12) * 440;
+      return {
+        empty: false,
+        acc,
+        alt,
+        chroma,
+        coord,
+        freq,
+        height,
+        letter,
+        midi,
+        name,
+        oct,
+        pc,
+        step
+      };
+    }
+    function pitchName(props) {
+      const { step, alt, oct } = props;
+      const letter = stepToLetter(step);
+      if (!letter) {
+        return "";
+      }
+      const pc = letter + altToAcc(alt);
+      return oct || oct === 0 ? pc + oct : pc;
     }
 
-    /**
-     * A midi note number is a number representation of a note pitch. It can be
-     * integers so it's equal tempered tuned, or float to indicate it's not
-     * tuned into equal temepered scale.
-     *
-     * This module contains functions to convert to and from midi notes.
-     *
-     * @example
-     * var midi = require('tonal-midi')
-     * midi.toMidi('A4') // => 69
-     * midi.note(69) // => 'A4'
-     * midi.note(61) // => 'Db4'
-     * midi.note(61, true) // => 'C#4'
-     *
-     * @module midi
-     */
-
-    /**
-     * Convert the given note to a midi note number. If you pass a midi number it
-     * will returned as is.
-     *
-     * @param {Array|String|Number} note - the note to get the midi number from
-     * @return {Integer} the midi number or null if not valid pitch
-     * @example
-     * midi.toMidi('C4') // => 60
-     * midi.toMidi(60) // => 60
-     * midi.toMidi('60') // => 60
-     */
-    function toMidi (val) {
-      if (Array.isArray(val) && val.length === 2) return val[0] * 7 + val[1] * 12 + 12
-      return midi(val)
+    // index.ts
+    function isMidi(arg) {
+      return +arg >= 0 && +arg <= 127;
+    }
+    function toMidi(note$1) {
+      if (isMidi(note$1)) {
+        return +note$1;
+      }
+      const n = note(note$1);
+      return n.empty ? null : n.midi;
     }
 
     /**
@@ -1355,31 +1331,31 @@ var MidiWriter = (function () {
         return Writer;
     }());
 
-    var main = {
-        Constants: Constants,
-        ControllerChangeEvent: ControllerChangeEvent,
-        CopyrightEvent: CopyrightEvent,
-        CuePointEvent: CuePointEvent,
-        EndTrackEvent: EndTrackEvent,
-        InstrumentNameEvent: InstrumentNameEvent,
-        KeySignatureEvent: KeySignatureEvent,
-        LyricEvent: LyricEvent,
-        MarkerEvent: MarkerEvent,
-        NoteOnEvent: NoteOnEvent,
-        NoteOffEvent: NoteOffEvent,
-        NoteEvent: NoteEvent,
-        PitchBendEvent: PitchBendEvent,
-        ProgramChangeEvent: ProgramChangeEvent,
-        TempoEvent: TempoEvent,
-        TextEvent: TextEvent,
-        TimeSignatureEvent: TimeSignatureEvent,
-        Track: Track,
-        TrackNameEvent: TrackNameEvent,
-        Utils: Utils,
-        VexFlow: VexFlow,
-        Writer: Writer
-    };
+    exports.Constants = Constants;
+    exports.ControllerChangeEvent = ControllerChangeEvent;
+    exports.CopyrightEvent = CopyrightEvent;
+    exports.CuePointEvent = CuePointEvent;
+    exports.EndTrackEvent = EndTrackEvent;
+    exports.InstrumentNameEvent = InstrumentNameEvent;
+    exports.KeySignatureEvent = KeySignatureEvent;
+    exports.LyricEvent = LyricEvent;
+    exports.MarkerEvent = MarkerEvent;
+    exports.NoteEvent = NoteEvent;
+    exports.NoteOffEvent = NoteOffEvent;
+    exports.NoteOnEvent = NoteOnEvent;
+    exports.PitchBendEvent = PitchBendEvent;
+    exports.ProgramChangeEvent = ProgramChangeEvent;
+    exports.TempoEvent = TempoEvent;
+    exports.TextEvent = TextEvent;
+    exports.TimeSignatureEvent = TimeSignatureEvent;
+    exports.Track = Track;
+    exports.TrackNameEvent = TrackNameEvent;
+    exports.Utils = Utils;
+    exports.VexFlow = VexFlow;
+    exports.Writer = Writer;
 
-    return main;
+    Object.defineProperty(exports, '__esModule', { value: true });
 
-})();
+    return exports;
+
+})({});

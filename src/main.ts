@@ -1,3 +1,4 @@
+
 import {Constants} from './constants';
 import {ControllerChangeEvent} from './midi-events/controller-change-event';
 import {CopyrightEvent} from './meta-events/copyright-event';
@@ -21,7 +22,7 @@ import {Utils} from './utils';
 import {VexFlow} from './vexflow';
 import {Writer} from './writer';
 
-export default {
+export {
   Constants,
   ControllerChangeEvent,
   CopyrightEvent,
