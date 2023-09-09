@@ -1,4 +1,4 @@
-var MidiWriter = (function (exports) {
+var MidiWriter = (function () {
     'use strict';
 
     /**
@@ -6,7 +6,7 @@ var MidiWriter = (function (exports) {
      * @return {Constants}
      */
     var Constants = {
-        VERSION: '3.0.0',
+        VERSION: '3.0.1',
         HEADER_CHUNK_TYPE: [0x4d, 0x54, 0x68, 0x64],
         HEADER_CHUNK_LENGTH: [0x00, 0x00, 0x00, 0x06],
         HEADER_CHUNK_FORMAT0: [0x00, 0x00],
@@ -1331,31 +1331,31 @@ var MidiWriter = (function (exports) {
         return Writer;
     }());
 
-    exports.Constants = Constants;
-    exports.ControllerChangeEvent = ControllerChangeEvent;
-    exports.CopyrightEvent = CopyrightEvent;
-    exports.CuePointEvent = CuePointEvent;
-    exports.EndTrackEvent = EndTrackEvent;
-    exports.InstrumentNameEvent = InstrumentNameEvent;
-    exports.KeySignatureEvent = KeySignatureEvent;
-    exports.LyricEvent = LyricEvent;
-    exports.MarkerEvent = MarkerEvent;
-    exports.NoteEvent = NoteEvent;
-    exports.NoteOffEvent = NoteOffEvent;
-    exports.NoteOnEvent = NoteOnEvent;
-    exports.PitchBendEvent = PitchBendEvent;
-    exports.ProgramChangeEvent = ProgramChangeEvent;
-    exports.TempoEvent = TempoEvent;
-    exports.TextEvent = TextEvent;
-    exports.TimeSignatureEvent = TimeSignatureEvent;
-    exports.Track = Track;
-    exports.TrackNameEvent = TrackNameEvent;
-    exports.Utils = Utils;
-    exports.VexFlow = VexFlow;
-    exports.Writer = Writer;
+    var main = {
+        Constants: Constants,
+        ControllerChangeEvent: ControllerChangeEvent,
+        CopyrightEvent: CopyrightEvent,
+        CuePointEvent: CuePointEvent,
+        EndTrackEvent: EndTrackEvent,
+        InstrumentNameEvent: InstrumentNameEvent,
+        KeySignatureEvent: KeySignatureEvent,
+        LyricEvent: LyricEvent,
+        MarkerEvent: MarkerEvent,
+        NoteOnEvent: NoteOnEvent,
+        NoteOffEvent: NoteOffEvent,
+        NoteEvent: NoteEvent,
+        PitchBendEvent: PitchBendEvent,
+        ProgramChangeEvent: ProgramChangeEvent,
+        TempoEvent: TempoEvent,
+        TextEvent: TextEvent,
+        TimeSignatureEvent: TimeSignatureEvent,
+        Track: Track,
+        TrackNameEvent: TrackNameEvent,
+        Utils: Utils,
+        VexFlow: VexFlow,
+        Writer: Writer
+    };
 
-    Object.defineProperty(exports, '__esModule', { value: true });
+    return main;
 
-    return exports;
-
-})({});
+})();

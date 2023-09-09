@@ -22,7 +22,7 @@ import {Utils} from './utils';
 import {VexFlow} from './vexflow';
 import {Writer} from './writer';
 
-export {
+export default {
   Constants,
   ControllerChangeEvent,
   CopyrightEvent,
