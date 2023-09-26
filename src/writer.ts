@@ -53,7 +53,15 @@ class Writer {
 	 */
 	base64(): string {
 		if (typeof btoa === 'function') {
-			return btoa(String.fromCharCode.apply(null, this.buildFile()));
+			let binary = '';
+			const bytes = this.buildFile();
+			const len = bytes.byteLength;
+
+			for (let i = 0; i < len; i++) {
+				binary += String.fromCharCode(bytes[i]);
+			}
+
+			return btoa(binary);
 		}
 
 		return Buffer.from(this.buildFile()).toString('base64');
