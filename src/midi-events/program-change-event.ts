@@ -21,7 +21,7 @@ class ProgramChangeEvent implements MidiEvent {
 		this.status = 0xC0;
 		this.name = 'ProgramChangeEvent';
 		// delta time defaults to 0.
-		this.data = Utils.numberToVariableLength(this.delta).concat(this.status | this.channel - 1, this.instrument);
+		this.data = Utils.numberToVariableLength(this.delta).concat(this.status | this.channel, this.instrument);
 	}
 }
 
