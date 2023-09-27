@@ -6,7 +6,7 @@ var MidiWriter = (function () {
      * @return {Constants}
      */
     var Constants = {
-        VERSION: '3.0.1',
+        VERSION: '3.1.0',
         HEADER_CHUNK_TYPE: [0x4d, 0x54, 0x68, 0x64],
         HEADER_CHUNK_LENGTH: [0x00, 0x00, 0x00, 0x06],
         HEADER_CHUNK_FORMAT0: [0x00, 0x00],
@@ -786,7 +786,7 @@ var MidiWriter = (function () {
             this.status = 0xC0;
             this.name = 'ProgramChangeEvent';
             // delta time defaults to 0.
-            this.data = Utils.numberToVariableLength(this.delta).concat(this.status | this.channel - 1, this.instrument);
+            this.data = Utils.numberToVariableLength(this.delta).concat(this.status | this.channel, this.instrument);
         }
         return ProgramChangeEvent;
     }());
@@ -1300,7 +1300,13 @@ var MidiWriter = (function () {
          */
         Writer.prototype.base64 = function () {
             if (typeof btoa === 'function') {
-                return btoa(String.fromCharCode.apply(null, this.buildFile()));
+                var binary = '';
+                var bytes = this.buildFile();
+                var len = bytes.byteLength;
+                for (var i = 0; i < len; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                return btoa(binary);
             }
             return Buffer.from(this.buildFile()).toString('base64');
         };
