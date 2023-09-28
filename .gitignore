@@ -2,6 +2,7 @@
 npm-debug.log
 node_modules
 build
+browser/types
 index.html
 index.js
 yarn.lock

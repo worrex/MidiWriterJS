@@ -3,7 +3,7 @@
   "version": "3.1.0",
   "description": "A library providing an API for generating MIDI files.",
   "main": "build/index.js",
-  "types": "types.d.ts",
+  "types": "build/types/main.d.ts",
   "dependencies": {
     "@tonaljs/midi": "^4.9.0"
   },
