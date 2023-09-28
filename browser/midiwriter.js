@@ -6,7 +6,7 @@ var MidiWriter = (function () {
      * @return {Constants}
      */
     var Constants = {
-        VERSION: '3.1.0',
+        VERSION: '3.1.1',
         HEADER_CHUNK_TYPE: [0x4d, 0x54, 0x68, 0x64],
         HEADER_CHUNK_LENGTH: [0x00, 0x00, 0x00, 0x06],
         HEADER_CHUNK_FORMAT0: [0x00, 0x00],
