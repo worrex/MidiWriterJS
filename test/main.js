@@ -268,7 +268,7 @@ describe('MidiWriterJS', function() {
 			track.mergeTrack(track2);
 			const write = new MidiWriter.Writer([track]);
 
-			assert.equal('', write.base64());
+			assert.equal('TVRoZAAAAAYAAAABAIBNVHJrAAAANwCQQEAAkENAgQCAQEAAkD5AAIBDQACQQUCBAIA+QACQPEAAgEFAAJBAQIIAgDxAAIBAQAD/LwA=', write.base64());
 		});
 	});
 
