@@ -634,7 +634,16 @@ var MidiWriter = (function () {
             this.grace = fields.grace;
             this.repeat = fields.repeat || 1;
             this.sequential = fields.sequential || false;
-            this.tick = fields.startTick || fields.tick || null;
+            // Use a more explicit check:
+            if (fields.startTick !== undefined && fields.startTick !== null) {
+                this.tick = fields.startTick;
+            }
+            else if (fields.tick !== undefined && fields.tick !== null) {
+                this.tick = fields.tick;
+            }
+            else {
+                this.tick = null;
+            }
             this.velocity = fields.velocity || 50;
             this.wait = fields.wait || 0;
             this.tickDuration = Utils.getTickDuration(this.duration);
